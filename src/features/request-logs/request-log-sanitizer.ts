@@ -41,12 +41,19 @@ function sanitizeUnknownValue(value: unknown, key?: string): JsonValue {
     return MASKED_REQUEST_LOG_VALUE;
   }
 
-  if (
-    value === null ||
-    typeof value === 'string' ||
-    typeof value === 'number' ||
-    typeof value === 'boolean'
-  ) {
+  if (value === null) {
+    return null;
+  }
+
+  if (typeof value === 'string') {
+    return value;
+  }
+
+  if (typeof value === 'number') {
+    return value;
+  }
+
+  if (typeof value === 'boolean') {
     return value;
   }
 
