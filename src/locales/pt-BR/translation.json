@@ -1,0 +1,1215 @@
+{
+  "app": {
+    "name": "Gateway Hub LF"
+  },
+  "common": {
+    "actions": {
+      "delete": "Excluir",
+      "deleting": "Excluindo...",
+      "cancel": "Cancelar"
+    }
+  },
+  "nav": {
+    "home": "Início",
+    "dashboard": "Dashboard",
+    "users": "Usuários",
+    "clients": "Clientes",
+    "apiKeys": "API Keys",
+    "allowedIps": "Allowed IPs",
+    "gatewayRoutes": "Gateway Routes",
+    "routeHeaders": "Route Headers",
+    "auditLogs": "Logs de Auditoria",
+    "requestLogs": "Logs de Requisições",
+    "settings": "Configurações"
+  },
+  "sidebar": {
+    "expand": "Expandir menu",
+    "collapse": "Recolher menu",
+    "openMenu": "Abrir menu",
+    "closeMenu": "Fechar menu",
+    "footer": {
+      "language": "Idioma",
+      "theme": "Tema",
+      "logout": "Sair"
+    }
+  },
+  "theme": {
+    "light": "Claro",
+    "dark": "Escuro",
+    "toggle": "Alternar tema"
+  },
+  "language": {
+    "select": "Selecionar idioma",
+    "pt-BR": "Português (Brasil)",
+    "en": "English",
+    "es": "Español"
+  },
+  "notFound": {
+    "title": "404",
+    "description": "Página não encontrada.",
+    "backHome": "Voltar para o início"
+  },
+  "home": {
+    "title": "Gateway Hub LF",
+    "subtitle": "Integrações seguras, centralizadas e sob controle.",
+    "description": "O Gateway Hub LF protege a comunicação entre sistemas externos e aplicações internas, centralizando autenticação, rotas, API Keys, controle de IPs, auditoria e monitoramento em uma única plataforma.",
+    "heroAlt": "Mascote do Gateway Hub LF",
+    "cards": {
+      "security": {
+        "title": "Segurança",
+        "description": "Autenticação centralizada e proteção das integrações."
+      },
+      "apiKeys": {
+        "title": "API Keys",
+        "description": "Emissão e controle de chaves de acesso às integrações."
+      },
+      "ipControl": {
+        "title": "Controle de IP",
+        "description": "Restrição de acesso por IPs permitidos."
+      },
+      "routes": {
+        "title": "Rotas",
+        "description": "Gestão centralizada das rotas do gateway."
+      },
+      "audit": {
+        "title": "Auditoria",
+        "description": "Rastreabilidade completa das ações administrativas."
+      },
+      "monitoring": {
+        "title": "Monitoramento",
+        "description": "Acompanhamento das requisições em tempo real."
+      }
+    }
+  },
+  "pages": {
+    "placeholder": "Esta página será implementada em uma próxima etapa."
+  },
+  "api": {
+    "errors": {
+      "network": "Não foi possível conectar ao servidor.",
+      "timeout": "A requisição demorou demais para ser concluída.",
+      "unauthorized": "Sua sessão não é válida ou expirou.",
+      "forbidden": "Você não tem permissão para acessar este recurso.",
+      "notFound": "O recurso solicitado não foi encontrado.",
+      "conflict": "Houve um conflito ao processar a solicitação.",
+      "rateLimit": "Muitas requisições. Tente novamente em instantes.",
+      "server": "Ocorreu um erro no servidor. Tente novamente mais tarde.",
+      "unknown": "Ocorreu um erro inesperado."
+    },
+    "status": {
+      "title": "Status do backend",
+      "checking": "Verificando conexão com o backend...",
+      "connected": "Backend conectado",
+      "disconnected": "Não foi possível conectar ao backend.",
+      "retry": "Tentar novamente",
+      "application": "Aplicação",
+      "uptime": "Tempo ativo"
+    }
+  },
+  "delete": {
+    "title": "Excluir registro",
+    "description": "Você está prestes a excluir \"{{name}}\".",
+    "irreversible": "Esta ação é irreversível.",
+    "dependenciesWarning": "A exclusão pode ser bloqueada caso existam registros dependentes.",
+    "success": "Registro excluído com sucesso.",
+    "forbidden": "Você não possui permissão para excluir este registro.",
+    "notFound": "O registro não existe mais.",
+    "conflict": "Não foi possível excluir: existem registros dependentes.",
+    "requestId": "Código de atendimento: {{requestId}}"
+  },
+  "auth": {
+    "login": {
+      "title": "Entrar",
+      "subtitle": "Acesse o painel administrativo do Gateway Hub LF.",
+      "loginLabel": "Usuário ou e-mail",
+      "passwordLabel": "Senha",
+      "submit": "Entrar",
+      "loading": "Entrando...",
+      "invalidCredentials": "Usuário ou senha inválidos.",
+      "rateLimit": "Muitas tentativas. Aguarde um momento antes de tentar novamente.",
+      "networkError": "Não foi possível conectar ao servidor. Tente novamente.",
+      "showPassword": "Mostrar senha",
+      "hidePassword": "Ocultar senha",
+      "loginRequired": "Informe o usuário ou e-mail.",
+      "passwordRequired": "Informe a senha."
+    },
+    "changePassword": {
+      "title": "Trocar senha",
+      "currentPassword": "Senha atual",
+      "newPassword": "Nova senha",
+      "confirmPassword": "Confirmar nova senha",
+      "submit": "Salvar nova senha",
+      "success": "Senha alterada com sucesso. Redirecionando...",
+      "error": "Não foi possível alterar a senha. Verifique a senha atual e tente novamente."
+    },
+    "passwordRequirements": {
+      "length": "Mínimo de 12 caracteres",
+      "uppercase": "Pelo menos uma letra maiúscula",
+      "lowercase": "Pelo menos uma letra minúscula",
+      "number": "Pelo menos um número",
+      "special": "Pelo menos um caractere especial",
+      "match": "As senhas devem ser iguais"
+    },
+    "session": {
+      "expired": "Sua sessão expirou.",
+      "signInAgain": "Entre novamente."
+    },
+    "logoutLoading": "Saindo...",
+    "forbidden": {
+      "title": "Acesso negado",
+      "description": "Você não tem permissão para acessar esta página."
+    },
+    "loadingSession": "Carregando sua sessão...",
+    "roles": {
+      "ADMIN": "Administrador",
+      "OPERATOR": "Operador",
+      "VIEWER": "Visualizador",
+      "AUDITOR": "Auditor"
+    }
+  },
+  "dashboard": {
+    "title": "Dashboard",
+    "subtitle": "Visão geral do Gateway Hub LF no período selecionado.",
+    "notAvailable": "—",
+    "filters": {
+      "period": {
+        "label": "Período",
+        "options": {
+          "today": "Hoje",
+          "last7days": "Últimos 7 dias",
+          "last30days": "Últimos 30 dias",
+          "last90days": "Últimos 90 dias",
+          "custom": "Personalizado"
+        }
+      },
+      "startDate": "Data inicial",
+      "endDate": "Data final",
+      "client": {
+        "label": "Cliente",
+        "placeholder": "Buscar cliente...",
+        "empty": "Nenhum cliente encontrado"
+      },
+      "route": {
+        "label": "Rota",
+        "placeholder": "Buscar rota...",
+        "empty": "Nenhuma rota encontrada"
+      },
+      "status": {
+        "label": "Status",
+        "any": "Qualquer status"
+      },
+      "clear": "Limpar filtros",
+      "unsupportedNote": "Os filtros de cliente, rota e status ainda não são aplicados aos indicadores — o backend do Dashboard aceita apenas filtro por período nesta etapa."
+    },
+    "cards": {
+      "title": "Visão geral",
+      "clients": "Clientes",
+      "apiKeys": "API Keys",
+      "routes": "Rotas",
+      "requests": "Requisições",
+      "errors": "Erros",
+      "successRate": "Taxa de sucesso"
+    },
+    "indicators": {
+      "title": "Desempenho",
+      "averageResponseTime": "Tempo médio de resposta",
+      "maxResponseTime": "Tempo máximo de resposta"
+    },
+    "charts": {
+      "requestsOverTime": {
+        "title": "Requisições ao longo do tempo",
+        "description": "Gráfico de área mostrando requisições com sucesso e com erro ao longo do período.",
+        "success": "Sucesso",
+        "error": "Erro"
+      },
+      "statusDistribution": {
+        "title": "Distribuição por status HTTP",
+        "description": "Gráfico de barras com a quantidade de requisições por código de status HTTP.",
+        "total": "Total"
+      }
+    },
+    "topClients": {
+      "title": "Principais clientes",
+      "columns": {
+        "client": "Cliente",
+        "requests": "Requisições",
+        "errors": "Erros",
+        "averageResponseTime": "Tempo médio"
+      }
+    },
+    "topRoutes": {
+      "title": "Principais rotas",
+      "columns": {
+        "route": "Rota",
+        "method": "Método",
+        "requests": "Requisições",
+        "errors": "Erros",
+        "averageResponseTime": "Tempo médio"
+      }
+    },
+    "recentRequests": {
+      "title": "Últimas requisições",
+      "columns": {
+        "requestId": "Request ID",
+        "client": "Cliente",
+        "route": "Rota",
+        "status": "Status",
+        "duration": "Tempo",
+        "date": "Data"
+      }
+    },
+    "states": {
+      "loadError": "Não foi possível carregar os dados do dashboard.",
+      "emptyChart": "Sem dados suficientes para exibir o gráfico.",
+      "emptyTable": "Nenhum registro encontrado para o período selecionado."
+    }
+  },
+  "shared": {
+    "confirm": {
+      "cancel": "Cancelar",
+      "confirm": "Confirmar",
+      "loading": "Aguarde..."
+    },
+    "copy": {
+      "copy": "Copiar",
+      "copied": "Copiado!"
+    },
+    "error": {
+      "retry": "Tentar novamente",
+      "requestId": "Código de atendimento: {{requestId}}"
+    },
+    "pagination": {
+      "previous": "Anterior",
+      "next": "Próxima",
+      "page": "Página {{page}} de {{totalPages}}",
+      "summary": "Exibindo {{from}}–{{to}} de {{total}}"
+    },
+    "status": {
+      "active": "Ativo",
+      "inactive": "Inativo"
+    },
+    "clientResource": {
+      "client": "Cliente",
+      "identifier": "Identificador",
+      "status": "Status",
+      "actions": "Ações",
+      "clientStatus": "Status do cliente"
+    }
+  },
+  "users": {
+    "title": "Usuários",
+    "description": "Gerencie os usuários administrativos do Gateway Hub LF.",
+    "new": "Novo usuário",
+    "search": "Pesquisar por nome, usuário ou e-mail",
+    "empty": "Nenhum usuário encontrado.",
+    "error": "Não foi possível carregar os usuários.",
+    "filters": {
+      "role": "Perfil",
+      "status": "Status",
+      "firstLogin": "Primeiro acesso",
+      "clear": "Limpar filtros",
+      "allRoles": "Todos os perfis",
+      "allStatuses": "Todos",
+      "allFirstLogin": "Todos"
+    },
+    "table": {
+      "name": "Nome",
+      "username": "Usuário",
+      "email": "E-mail",
+      "role": "Perfil",
+      "status": "Status",
+      "firstLogin": "Primeiro acesso",
+      "lastLogin": "Último acesso",
+      "createdAt": "Criado em",
+      "actions": "Ações",
+      "pending": "Pendente",
+      "completed": "Concluído",
+      "never": "Nunca"
+    },
+    "actions": {
+      "view": "Visualizar",
+      "edit": "Editar",
+      "activate": "Ativar",
+      "deactivate": "Desativar",
+      "changeRole": "Alterar perfil",
+      "resetPassword": "Resetar senha",
+      "passwordRequirement": "Exigência de senha"
+    },
+    "form": {
+      "createTitle": "Novo usuário",
+      "editTitle": "Editar usuário",
+      "name": "Nome",
+      "username": "Username",
+      "email": "E-mail",
+      "role": "Perfil",
+      "rolePlaceholder": "Selecione um perfil",
+      "requirePasswordChange": "Exigir troca de senha no primeiro acesso",
+      "submitCreate": "Criar usuário",
+      "submitEdit": "Salvar alterações",
+      "errors": {
+        "nameLength": "O nome deve ter entre 3 e 150 caracteres.",
+        "usernameLength": "O usuário deve ter entre 3 e 50 caracteres.",
+        "usernameFormat": "O usuário deve conter apenas letras, números, pontos, underscores ou hífens.",
+        "emailInvalid": "Informe um e-mail válido.",
+        "roleRequired": "Selecione um perfil."
+      }
+    },
+    "temporaryPassword": {
+      "title": "Usuário criado com sucesso",
+      "description": "Copie a senha temporária abaixo — ela não poderá ser consultada novamente.",
+      "label": "Senha temporária",
+      "warning": "Esta senha será exibida apenas uma vez.",
+      "mustChange": "O usuário deverá trocar essa senha no primeiro acesso.",
+      "mayKeep": "A troca de senha não é obrigatória no próximo acesso.",
+      "close": "Concluir"
+    },
+    "status": {
+      "activateTitle": "Ativar usuário",
+      "deactivateTitle": "Desativar usuário",
+      "activateDescription": "Tem certeza de que deseja ativar o usuário {{name}}?",
+      "deactivateDescription": "Tem certeza de que deseja desativar o usuário {{name}}?"
+    },
+    "role": {
+      "current": "Perfil atual",
+      "new": "Novo perfil"
+    },
+    "resetPassword": {
+      "description": "Uma nova senha temporária será gerada para {{name}}. A senha atual deixará de funcionar."
+    },
+    "passwordRequirement": {
+      "enable": "Exigir troca de senha",
+      "disable": "Não exigir troca de senha",
+      "enableDescription": "{{name}} precisará trocar a senha no próximo login.",
+      "disableDescription": "{{name}} não precisará trocar a senha no próximo login."
+    },
+    "details": {
+      "title": "Detalhes do usuário",
+      "updatedAt": "Atualizado em"
+    },
+    "success": {
+      "created": "Usuário criado com sucesso.",
+      "updated": "Usuário atualizado com sucesso.",
+      "statusChanged": "Status do usuário atualizado com sucesso.",
+      "roleChanged": "Perfil do usuário atualizado com sucesso.",
+      "passwordReset": "Senha resetada com sucesso.",
+      "passwordRequirementChanged": "Exigência de troca de senha atualizada com sucesso."
+    },
+    "delete": {
+      "title": "Excluir usuário",
+      "success": "Usuário excluído com sucesso."
+    }
+  },
+  "clients": {
+    "title": "Clientes",
+    "description": "Gerencie os clientes do Gateway Hub LF.",
+    "new": "Novo cliente",
+    "search": "Pesquisar por nome, identificador, contato ou e-mail",
+    "empty": "Nenhum cliente encontrado.",
+    "error": "Não foi possível carregar os clientes.",
+    "notAvailable": "—",
+    "filters": {
+      "status": "Status",
+      "allStatuses": "Todos",
+      "sortBy": "Ordenar por",
+      "sortOrder": "Direção",
+      "ascending": "Crescente",
+      "descending": "Decrescente",
+      "clear": "Limpar filtros",
+      "sortOptions": {
+        "name": "Nome",
+        "code": "Identificador",
+        "createdAt": "Criado em",
+        "updatedAt": "Atualizado em"
+      }
+    },
+    "table": {
+      "name": "Nome",
+      "code": "Identificador",
+      "contact": "Contato",
+      "email": "E-mail",
+      "status": "Status",
+      "createdAt": "Criado em",
+      "updatedAt": "Atualizado em",
+      "actions": "Ações"
+    },
+    "actions": {
+      "view": "Visualizar",
+      "edit": "Editar",
+      "activate": "Ativar",
+      "deactivate": "Desativar"
+    },
+    "form": {
+      "createTitle": "Novo cliente",
+      "editTitle": "Editar cliente",
+      "name": "Nome",
+      "code": "Identificador",
+      "description": "Descrição",
+      "contactName": "Contato",
+      "contactEmail": "E-mail",
+      "submitCreate": "Criar cliente",
+      "submitEdit": "Salvar alterações",
+      "errors": {
+        "nameLength": "O nome deve ter entre 2 e 150 caracteres.",
+        "descriptionLength": "A descrição deve ter no máximo 500 caracteres.",
+        "contactNameLength": "O contato deve ter no máximo 150 caracteres.",
+        "emailInvalid": "Informe um e-mail válido."
+      }
+    },
+    "fields": {
+      "identifier": "Identificador"
+    },
+    "identifier": {
+      "generatedHint": "O identificador é gerado automaticamente a partir do nome informado.",
+      "emptyHint": "O identificador será gerado após informar o nome.",
+      "immutableHint": "O identificador é definido na criação do cliente e não muda ao editar o nome."
+    },
+    "status": {
+      "activateTitle": "Ativar cliente",
+      "deactivateTitle": "Desativar cliente",
+      "activateDescription": "Tem certeza de que deseja ativar o cliente {{name}}?",
+      "deactivateDescription": "Tem certeza de que deseja desativar o cliente {{name}}?"
+    },
+    "details": {
+      "title": "Detalhes do cliente"
+    },
+    "success": {
+      "created": "Cliente criado com sucesso.",
+      "updated": "Cliente atualizado com sucesso.",
+      "statusChanged": "Status do cliente atualizado com sucesso."
+    },
+    "delete": {
+      "title": "Excluir cliente",
+      "success": "Cliente excluído com sucesso.",
+      "dependenciesWarning": "A exclusão pode ser bloqueada se o cliente tiver API Keys, Allowed IPs, Gateway Routes ou histórico de logs vinculados."
+    }
+  },
+  "apiKeys": {
+    "title": "API Keys",
+    "description": "Gerencie as chaves de API do Gateway Hub LF.",
+    "new": "Nova API Key",
+    "search": "Pesquisar por nome ou cliente",
+    "empty": "Nenhuma API Key encontrada.",
+    "error": "Não foi possível carregar as API Keys.",
+    "notAvailable": "—",
+    "clientsView": {
+      "action": "Ver API Keys",
+      "searchPlaceholder": "Buscar por nome ou identificador do cliente",
+      "allStatuses": "Todos",
+      "sortBy": "Ordenar por",
+      "sortOrder": "Direção",
+      "ascending": "Crescente",
+      "descending": "Decrescente",
+      "clear": "Limpar filtros",
+      "sortOptions": {
+        "clientName": "Cliente",
+        "total": "Total",
+        "active": "Ativas",
+        "inactive": "Inativas",
+        "revoked": "Revogadas"
+      },
+      "counts": "{{total}} no total · {{active}} ativas · {{inactive}} inativas · {{revoked}} revogadas"
+    },
+    "clientDrawer": {
+      "title": "API Keys — {{name}}",
+      "empty": "Nenhuma API Key encontrada para este cliente."
+    },
+    "filters": {
+      "client": "Cliente",
+      "clientPlaceholder": "Buscar cliente...",
+      "clientEmpty": "Nenhum cliente encontrado",
+      "status": "Status",
+      "allStatuses": "Todos",
+      "expiration": "Expiração",
+      "allExpirations": "Todas",
+      "onlyExpired": "Somente expiradas",
+      "sortBy": "Ordenar por",
+      "sortOrder": "Direção",
+      "ascending": "Crescente",
+      "descending": "Decrescente",
+      "clear": "Limpar filtros",
+      "sortOptions": {
+        "name": "Nome",
+        "createdAt": "Criado em",
+        "updatedAt": "Atualizado em",
+        "expiresAt": "Expiração",
+        "lastUsedAt": "Última utilização"
+      }
+    },
+    "table": {
+      "name": "Nome",
+      "client": "Cliente",
+      "status": "Status",
+      "expiresAt": "Expiração",
+      "revoked": "Revogada",
+      "createdAt": "Criado em",
+      "lastUsedAt": "Última utilização",
+      "actions": "Ações",
+      "yes": "Sim",
+      "no": "Não"
+    },
+    "actions": {
+      "view": "Visualizar",
+      "edit": "Editar",
+      "activate": "Ativar",
+      "deactivate": "Desativar",
+      "regenerate": "Regenerar",
+      "revoke": "Revogar"
+    },
+    "form": {
+      "createTitle": "Nova API Key",
+      "editTitle": "Editar API Key",
+      "client": "Cliente",
+      "name": "Nome",
+      "expiresAt": "Expiração (opcional)",
+      "submitCreate": "Criar API Key",
+      "submitEdit": "Salvar alterações",
+      "errors": {
+        "nameLength": "O nome deve ter entre 2 e 150 caracteres.",
+        "clientRequired": "Selecione um cliente."
+      }
+    },
+    "reveal": {
+      "title": "API Key criada com sucesso",
+      "description": "Esta chave será exibida apenas uma vez.",
+      "keyLabel": "API Key",
+      "warning": "Copie e guarde esta chave em um local seguro — ela não poderá ser consultada novamente.",
+      "endpointLabel": "Endpoint público",
+      "endpointNote": "O caminho completo depende da rota do gateway configurada para este cliente.",
+      "endpointUnavailable": "Endpoint público não configurado (VITE_PUBLIC_GATEWAY_URL ausente).",
+      "confirm": "Já salvei minha API Key"
+    },
+    "status": {
+      "activateTitle": "Ativar API Key",
+      "deactivateTitle": "Desativar API Key",
+      "activateDescription": "Tem certeza de que deseja ativar a API Key {{name}}?",
+      "deactivateDescription": "Tem certeza de que deseja desativar a API Key {{name}}?"
+    },
+    "revoke": {
+      "description": "Tem certeza? A chave atual de {{name}} deixará de funcionar imediatamente."
+    },
+    "regenerate": {
+      "description": "Tem certeza? Uma nova chave será gerada para {{name}} e a chave atual deixará de funcionar imediatamente."
+    },
+    "details": {
+      "title": "Detalhes da API Key",
+      "updatedAt": "Atualizado em"
+    },
+    "success": {
+      "created": "API Key criada com sucesso.",
+      "updated": "API Key atualizada com sucesso.",
+      "statusChanged": "Status da API Key atualizado com sucesso.",
+      "revoked": "API Key revogada com sucesso.",
+      "regenerated": "API Key regenerada com sucesso."
+    },
+    "delete": {
+      "title": "Excluir API Key",
+      "success": "API Key excluída com sucesso.",
+      "irretrievableWarning": "A exclusão não exibirá ou recuperará a chave."
+    }
+  },
+  "allowedIps": {
+    "title": "Allowed IPs",
+    "description": "Gerencie os IPs e redes permitidos do Gateway Hub LF.",
+    "new": "Novo Allowed IP",
+    "search": "Pesquisar por endereço, descrição ou cliente",
+    "empty": "Nenhum Allowed IP encontrado.",
+    "error": "Não foi possível carregar os Allowed IPs.",
+    "notAvailable": "—",
+    "clientsView": {
+      "action": "Ver IPs",
+      "searchPlaceholder": "Buscar por nome ou identificador do cliente",
+      "allStatuses": "Todos",
+      "sortBy": "Ordenar por",
+      "sortOrder": "Direção",
+      "ascending": "Crescente",
+      "descending": "Decrescente",
+      "clear": "Limpar filtros",
+      "sortOptions": {
+        "clientName": "Cliente",
+        "total": "Total",
+        "active": "Ativos",
+        "inactive": "Inativos"
+      },
+      "counts": "{{total}} no total · {{active}} ativos · {{inactive}} inativos"
+    },
+    "clientDrawer": {
+      "title": "Allowed IPs — {{name}}",
+      "empty": "Nenhum IP encontrado para este cliente."
+    },
+    "types": {
+      "IPV4": "IPv4",
+      "IPV6": "IPv6",
+      "CIDR_IPV4": "CIDR IPv4",
+      "CIDR_IPV6": "CIDR IPv6"
+    },
+    "filters": {
+      "client": "Cliente",
+      "clientPlaceholder": "Buscar cliente...",
+      "clientEmpty": "Nenhum cliente encontrado",
+      "type": "Tipo",
+      "allTypes": "Todos",
+      "status": "Status",
+      "allStatuses": "Todos",
+      "sortBy": "Ordenar por",
+      "sortOrder": "Direção",
+      "ascending": "Crescente",
+      "descending": "Decrescente",
+      "clear": "Limpar filtros",
+      "sortOptions": {
+        "address": "Endereço",
+        "createdAt": "Criado em",
+        "updatedAt": "Atualizado em"
+      }
+    },
+    "table": {
+      "address": "Endereço",
+      "type": "Tipo",
+      "client": "Cliente",
+      "status": "Status",
+      "createdAt": "Criado em",
+      "updatedAt": "Atualizado em",
+      "actions": "Ações"
+    },
+    "actions": {
+      "view": "Visualizar",
+      "edit": "Editar",
+      "activate": "Ativar",
+      "deactivate": "Desativar"
+    },
+    "form": {
+      "createTitle": "Novo Allowed IP",
+      "editTitle": "Editar Allowed IP",
+      "client": "Cliente",
+      "address": "IP ou CIDR",
+      "addressHint": "Endereços IPv4/IPv6 ou redes CIDR são aceitos — o backend normaliza automaticamente (ex.: 192.168.1.50/24 vira 192.168.1.0/24).",
+      "description": "Descrição",
+      "submitCreate": "Criar Allowed IP",
+      "submitEdit": "Salvar alterações",
+      "errors": {
+        "addressRequired": "Informe um IP ou rede CIDR.",
+        "addressLength": "O endereço deve ter no máximo 100 caracteres.",
+        "descriptionLength": "A descrição deve ter no máximo 500 caracteres.",
+        "clientRequired": "Selecione um cliente."
+      }
+    },
+    "status": {
+      "activateTitle": "Ativar Allowed IP",
+      "deactivateTitle": "Desativar Allowed IP",
+      "activateDescription": "Tem certeza de que deseja ativar o Allowed IP {{address}}?",
+      "deactivateDescription": "Tem certeza de que deseja desativar o Allowed IP {{address}}?"
+    },
+    "details": {
+      "title": "Detalhes do Allowed IP"
+    },
+    "success": {
+      "created": "Allowed IP criado com sucesso: {{address}}.",
+      "updated": "Allowed IP atualizado com sucesso: {{address}}.",
+      "statusChanged": "Status do Allowed IP atualizado com sucesso."
+    },
+    "delete": {
+      "title": "Excluir Allowed IP",
+      "success": "Allowed IP excluído com sucesso.",
+      "entityLabel": "Cliente: {{client}} — {{address}} ({{type}})"
+    }
+  },
+  "gatewayRoutes": {
+    "title": "Gateway Routes",
+    "description": "Gerencie as rotas públicas do Gateway Hub LF.",
+    "new": "Nova rota",
+    "search": "Pesquisar por nome, slug, cliente ou destino",
+    "empty": "Nenhuma rota encontrada.",
+    "error": "Não foi possível carregar as rotas.",
+    "notAvailable": "—",
+    "clientsView": {
+      "action": "Ver rotas",
+      "searchPlaceholder": "Buscar por nome ou identificador do cliente",
+      "allStatuses": "Todos",
+      "sortBy": "Ordenar por",
+      "sortOrder": "Direção",
+      "ascending": "Crescente",
+      "descending": "Decrescente",
+      "clear": "Limpar filtros",
+      "sortOptions": {
+        "clientName": "Cliente",
+        "total": "Total",
+        "active": "Ativas",
+        "inactive": "Inativas"
+      },
+      "counts": "{{total}} no total · {{active}} ativas · {{inactive}} inativas"
+    },
+    "clientDrawer": {
+      "title": "Gateway Routes — {{name}}",
+      "empty": "Nenhuma rota encontrada para este cliente."
+    },
+    "filters": {
+      "client": "Cliente",
+      "clientPlaceholder": "Buscar cliente...",
+      "clientEmpty": "Nenhum cliente encontrado",
+      "method": "Método",
+      "allMethods": "Todos",
+      "status": "Status",
+      "allStatuses": "Todos",
+      "sortBy": "Ordenar por",
+      "sortOrder": "Direção",
+      "ascending": "Crescente",
+      "descending": "Decrescente",
+      "clear": "Limpar filtros",
+      "sortOptions": {
+        "name": "Nome",
+        "slug": "Slug",
+        "createdAt": "Criado em",
+        "updatedAt": "Atualizado em",
+        "timeoutMs": "Timeout"
+      }
+    },
+    "table": {
+      "name": "Nome",
+      "client": "Cliente",
+      "method": "Método",
+      "slug": "Slug",
+      "publicEndpoint": "Endpoint público",
+      "timeout": "Timeout",
+      "timeoutValue": "{{ms}} ms",
+      "retry": "Retry",
+      "status": "Status",
+      "createdAt": "Criado em",
+      "updatedAt": "Atualizado em",
+      "actions": "Ações"
+    },
+    "actions": {
+      "view": "Visualizar",
+      "edit": "Editar",
+      "activate": "Ativar",
+      "deactivate": "Desativar"
+    },
+    "form": {
+      "createTitle": "Nova rota",
+      "editTitle": "Editar rota",
+      "client": "Cliente",
+      "name": "Nome",
+      "slug": "Slug",
+      "publicPathPreview": "Caminho público: {{path}}",
+      "method": "Método HTTP",
+      "destinationUrl": "URL de destino",
+      "timeoutMs": "Timeout (ms)",
+      "retryCount": "Tentativas de retry",
+      "description": "Descrição",
+      "submitCreate": "Criar rota",
+      "submitEdit": "Salvar alterações",
+      "errors": {
+        "clientRequired": "Selecione um cliente.",
+        "nameLength": "O nome deve ter entre 2 e 150 caracteres.",
+        "slugRequired": "Informe o slug da rota.",
+        "slugLength": "O slug deve ter no máximo 255 caracteres.",
+        "destinationUrlRequired": "Informe a URL de destino.",
+        "destinationUrlLength": "A URL de destino deve ter no máximo 2000 caracteres.",
+        "destinationUrlInvalid": "Informe uma URL válida.",
+        "methodRequired": "Selecione um método HTTP.",
+        "timeoutRequired": "Informe o timeout.",
+        "timeoutRange": "O timeout deve estar entre 1000 e 120000 ms.",
+        "retryRequired": "Informe as tentativas de retry.",
+        "retryRange": "As tentativas de retry devem estar entre 0 e 5.",
+        "descriptionLength": "A descrição deve ter no máximo 500 caracteres."
+      }
+    },
+    "status": {
+      "activateTitle": "Ativar rota",
+      "deactivateTitle": "Desativar rota",
+      "activateDescription": "Tem certeza de que deseja ativar a rota {{name}}?",
+      "deactivateDescription": "Tem certeza de que deseja desativar a rota {{name}}?"
+    },
+    "details": {
+      "title": "Detalhes da rota"
+    },
+    "success": {
+      "created": "Rota {{name}} criada com sucesso.",
+      "updated": "Rota {{name}} atualizada com sucesso.",
+      "statusChanged": "Status da rota atualizado com sucesso."
+    },
+    "delete": {
+      "title": "Excluir rota",
+      "success": "Rota excluída com sucesso.",
+      "dependenciesWarning": "Esta rota não pode ser excluída enquanto possuir headers ou registros históricos vinculados."
+    }
+  },
+  "routeHeaders": {
+    "title": "Route Headers",
+    "description": "Gerencie os headers configurados para cada Gateway Route.",
+    "new": "Novo header",
+    "search": "Pesquisar por nome do header, rota ou slug",
+    "empty": "Nenhum header encontrado.",
+    "error": "Não foi possível carregar os headers.",
+    "notAvailable": "—",
+    "sensitive": {
+      "yes": "Sensível",
+      "no": "Não sensível"
+    },
+    "filters": {
+      "gatewayRoute": "Gateway Route",
+      "gatewayRoutePlaceholder": "Buscar rota...",
+      "gatewayRouteEmpty": "Nenhuma rota encontrada",
+      "sensitive": "Sensibilidade",
+      "allSensitivity": "Todos",
+      "status": "Status",
+      "allStatuses": "Todos",
+      "sortBy": "Ordenar por",
+      "sortOrder": "Direção",
+      "ascending": "Crescente",
+      "descending": "Decrescente",
+      "clear": "Limpar filtros",
+      "sortOptions": {
+        "headerName": "Header",
+        "createdAt": "Criado em",
+        "updatedAt": "Atualizado em"
+      }
+    },
+    "table": {
+      "name": "Header",
+      "gatewayRoute": "Gateway Route",
+      "client": "Cliente",
+      "publicEndpoint": "Endpoint público",
+      "sensitive": "Sensível",
+      "status": "Status",
+      "createdAt": "Criado em",
+      "updatedAt": "Atualizado em",
+      "actions": "Ações"
+    },
+    "actions": {
+      "view": "Visualizar",
+      "edit": "Editar",
+      "activate": "Ativar",
+      "deactivate": "Desativar"
+    },
+    "form": {
+      "createTitle": "Novo header",
+      "editTitle": "Editar header",
+      "gatewayRoute": "Gateway Route",
+      "client": "Cliente",
+      "route": "Rota",
+      "method": "Método HTTP",
+      "name": "Nome do header",
+      "value": "Valor",
+      "sensitive": "Header sensível",
+      "keepCurrentValue": "Deixe em branco para manter o valor atual.",
+      "submitCreate": "Criar header",
+      "submitEdit": "Salvar alterações",
+      "errors": {
+        "gatewayRouteRequired": "Selecione uma Gateway Route.",
+        "nameRequired": "Informe o nome do header.",
+        "nameLength": "O nome do header deve ter no máximo 100 caracteres.",
+        "valueRequired": "Informe o valor do header.",
+        "valueLength": "O valor do header deve ter no máximo 4000 caracteres."
+      }
+    },
+    "status": {
+      "activateTitle": "Ativar header",
+      "deactivateTitle": "Desativar header",
+      "activateDescription": "Tem certeza de que deseja ativar o header {{name}}?",
+      "deactivateDescription": "Tem certeza de que deseja desativar o header {{name}}?"
+    },
+    "details": {
+      "title": "Detalhes do header"
+    },
+    "success": {
+      "created": "Header {{name}} criado com sucesso.",
+      "updated": "Header {{name}} atualizado com sucesso.",
+      "statusChanged": "Status do header atualizado com sucesso."
+    },
+    "delete": {
+      "title": "Excluir header",
+      "success": "Header excluído com sucesso.",
+      "routeLabel": "Rota: {{route}}"
+    }
+  },
+  "settings": {
+    "title": "Configurações",
+    "description": "Gerencie as configurações administrativas do Gateway.",
+    "nav": {
+      "label": "Menu de configurações",
+      "certificates": "Certificados"
+    },
+    "certificates": {
+      "title": "Certificados",
+      "subtitle": "Certificados internos",
+      "description": "Gerencie as autoridades certificadoras confiáveis utilizadas pelo Gateway para validar conexões HTTPS com serviços internos.",
+      "new": "Adicionar certificado",
+      "info": "As CAs confiáveis são usadas apenas quando o Gateway atua como cliente HTTPS para serviços internos. Quando nenhuma CA interna está ativa, o Gateway utiliza as autoridades certificadoras padrão do sistema operacional. A validação TLS permanece sempre obrigatória.",
+      "error": "Não foi possível carregar os certificados.",
+      "search": "Pesquisar por nome, subject, issuer ou serial",
+      "empty": {
+        "title": "Nenhum certificado interno cadastrado.",
+        "description": "O Gateway utilizará somente as autoridades certificadoras padrão do sistema."
+      },
+      "type": {
+        "root": "Root CA",
+        "ca": "CA"
+      },
+      "validity": {
+        "valid": "Válido",
+        "expiring": "Expirando",
+        "expired": "Expirado"
+      },
+      "table": {
+        "name": "Nome",
+        "type": "Tipo",
+        "fingerprint": "Fingerprint",
+        "subject": "Subject",
+        "issuer": "Issuer",
+        "validFrom": "Válido de",
+        "validTo": "Válido até",
+        "status": "Status",
+        "createdAt": "Criado em",
+        "actions": "Ações"
+      },
+      "actions": {
+        "activate": "Ativar",
+        "deactivate": "Desativar"
+      },
+      "filters": {
+        "status": "Status",
+        "allStatuses": "Todos",
+        "validity": "Validade",
+        "allValidity": "Todas",
+        "validityOptions": {
+          "valid": "Válido",
+          "expired": "Expirado"
+        },
+        "sortBy": "Ordenar por",
+        "sortOptions": {
+          "name": "Nome",
+          "validTo": "Válido até",
+          "createdAt": "Criado em",
+          "updatedAt": "Atualizado em"
+        },
+        "sortOrder": "Direção",
+        "ascending": "Crescente",
+        "descending": "Decrescente",
+        "clear": "Limpar filtros"
+      },
+      "form": {
+        "createTitle": "Adicionar certificado interno",
+        "name": "Nome",
+        "namePlaceholder": "Nome do certificado",
+        "file": "Arquivo",
+        "acceptedFormats": "Formatos aceitos: .pem, .crt, .cer",
+        "submitCreate": "Adicionar",
+        "errors": {
+          "fileRequired": "Selecione um arquivo de certificado.",
+          "nameLength": "O nome deve ter entre 3 e 120 caracteres."
+        }
+      },
+      "status": {
+        "activateTitle": "Ativar certificado",
+        "deactivateTitle": "Desativar certificado",
+        "activateDescription": "Ao ativar este certificado, o Gateway passará a confiar nele para validar conexões HTTPS com serviços internos. Isso não garante, por si só, que uma conexão específica funcionará — nome do host, validade e cadeia TLS continuam sendo verificados normalmente.",
+        "deactivateDescription": "Ao desativar este certificado, o Gateway deixará de confiar nele para validar conexões HTTPS com serviços internos. Conexões que dependam exclusivamente desta CA podem passar a falhar."
+      },
+      "delete": {
+        "title": "Excluir certificado interno?",
+        "dependenciesWarning": "O Gateway deixará de confiar em serviços que dependam exclusivamente desta CA."
+      },
+      "success": {
+        "created": "Certificado {{name}} adicionado com sucesso.",
+        "statusChanged": "Status do certificado atualizado com sucesso.",
+        "deleted": "Certificado removido com sucesso."
+      },
+      "errors": {
+        "privateKeyNotAllowed": "Chaves privadas não são permitidas. Envie apenas o certificado público.",
+        "unsupportedFormat": "Formato de arquivo não suportado. Utilize .pem, .crt ou .cer.",
+        "invalidCertificate": "Certificado inválido.",
+        "notCa": "O certificado enviado não é uma autoridade certificadora (CA).",
+        "expired": "O certificado enviado já está expirado.",
+        "invalidName": "Nome do certificado inválido.",
+        "alreadyExists": "Este certificado já foi cadastrado.",
+        "fileTooLarge": "O arquivo excede o tamanho máximo permitido (1 MB).",
+        "invalidUpload": "Envie o certificado em uma requisição multipart válida, com nome e arquivo."
+      }
+    }
+  },
+  "auditLogs": {
+    "title": "Logs de Auditoria",
+    "description": "Consulte o histórico das ações administrativas.",
+    "empty": "Nenhum audit log encontrado.",
+    "error": "Não foi possível carregar os audit logs.",
+    "notAvailable": "—",
+    "removedUser": "Usuário removido",
+    "actions": {
+      "view": "Visualizar"
+    },
+    "filters": {
+      "search": "Pesquisar",
+      "searchPlaceholder": "Pesquisar por usuário, entidade, descrição, ação ou identificador",
+      "action": "Ação",
+      "allActions": "Todas",
+      "entity": "Entidade",
+      "allEntities": "Todas",
+      "startDate": "Data inicial",
+      "endDate": "Data final",
+      "clear": "Limpar filtros",
+      "dateRangeInvalid": "A data inicial deve ser menor ou igual à data final."
+    },
+    "table": {
+      "date": "Data",
+      "user": "Usuário",
+      "action": "Ação",
+      "entity": "Entidade",
+      "description": "Descrição",
+      "sourceIp": "IP",
+      "actions": "Ações"
+    },
+    "details": {
+      "title": "Detalhes do audit log",
+      "username": "Username",
+      "role": "Perfil",
+      "entityId": "Entity ID",
+      "requestId": "Request ID",
+      "previousValue": "Valor anterior",
+      "newValue": "Novo valor"
+    },
+    "actionsMap": {
+      "CREATE": "Criação",
+      "UPDATE": "Atualização",
+      "DELETE": "Exclusão",
+      "ACTIVATE": "Ativação",
+      "DEACTIVATE": "Desativação",
+      "CHANGE_ROLE": "Alteração de perfil",
+      "RESET_PASSWORD": "Reset de senha",
+      "CHANGE_PASSWORD_REQUIREMENT": "Alteração de exigência de senha",
+      "LOGIN": "Login",
+      "LOGOUT": "Logout",
+      "REFRESH_TOKEN": "Refresh token",
+      "REVOKE": "Revogação",
+      "REGENERATE": "Regeneração"
+    },
+    "entitiesMap": {
+      "USER": "Usuário",
+      "ROLE": "Perfil",
+      "CLIENT": "Cliente",
+      "API_KEY": "API Key",
+      "ALLOWED_IP": "Allowed IP",
+      "GATEWAY_ROUTE": "Gateway Route",
+      "ROUTE_HEADER": "Route Header",
+      "SYSTEM_SETTING": "Configuração do sistema"
+    }
+  },
+  "requestLogs": {
+    "title": "Logs de Requisições",
+    "description": "Consulte o rastreamento operacional das chamadas do Gateway.",
+    "empty": "Nenhum request log encontrado.",
+    "error": "Não foi possível carregar os request logs.",
+    "noData": "Sem dados",
+    "notAvailable": "—",
+    "notIdentified": "Não identificado",
+    "notCalled": "Não chamado",
+    "notInformed": "Não informado",
+    "actions": {
+      "view": "Visualizar"
+    },
+    "origins": {
+      "PUBLIC": "Público",
+      "INTERNAL": "Interno"
+    },
+    "results": {
+      "SUCCESS": "Sucesso",
+      "ERROR": "Erro"
+    },
+    "filters": {
+      "search": "Pesquisar",
+      "searchPlaceholder": "Pesquisar por cliente, rota, IP, host, erro, método ou status",
+      "client": "Cliente",
+      "clientPlaceholder": "Buscar cliente",
+      "clientEmpty": "Nenhum cliente encontrado",
+      "apiKey": "API Key",
+      "apiKeyPlaceholder": "Buscar API Key",
+      "apiKeyEmpty": "Nenhuma API Key encontrada",
+      "gatewayRoute": "Gateway Route",
+      "gatewayRoutePlaceholder": "Buscar rota",
+      "gatewayRouteEmpty": "Nenhuma rota encontrada",
+      "origin": "Origem",
+      "allOrigins": "Todas",
+      "method": "Método HTTP",
+      "allMethods": "Todos",
+      "statusCode": "Status HTTP",
+      "statusCodePlaceholder": "Ex.: 200",
+      "result": "Resultado",
+      "allResults": "Todos",
+      "startDate": "Data inicial",
+      "endDate": "Data final",
+      "sortBy": "Ordenar por",
+      "sortOrder": "Direção",
+      "ascending": "Crescente",
+      "descending": "Decrescente",
+      "clear": "Limpar filtros",
+      "dateRangeInvalid": "A data inicial deve ser menor ou igual à data final."
+    },
+    "sortOptions": {
+      "attemptedAt": "Horário da tentativa",
+      "createdAt": "Criado em",
+      "durationMs": "Duração",
+      "statusCode": "Status HTTP",
+      "attempts": "Tentativas"
+    },
+    "table": {
+      "attemptedAt": "Horário",
+      "sortToggleToAscending": "Ordenar por horário: do mais antigo para o mais recente",
+      "sortToggleToDescending": "Ordenar por horário: do mais recente para o mais antigo",
+      "result": "Resultado",
+      "status": "Status",
+      "client": "Cliente",
+      "origin": "Origem",
+      "sourceIp": "IP Origem",
+      "method": "Método",
+      "route": "Rota",
+      "destination": "Destino",
+      "duration": "Duração",
+      "attempts": "Tentativas",
+      "actions": "Ações"
+    },
+    "sections": {
+      "summary": "Resumo",
+      "origin": "Origem",
+      "routing": "Roteamento",
+      "destination": "Destino",
+      "error": "Erro",
+      "payload": "Payload"
+    },
+    "details": {
+      "title": "Detalhes do request log",
+      "attemptedAt": "Horário da tentativa",
+      "createdAt": "Criado em",
+      "requestId": "Request ID",
+      "gatewayStatus": "Gateway",
+      "upstreamStatus": "Upstream",
+      "requestOrigin": "Origem",
+      "sourceHost": "Host de entrada",
+      "sourceIp": "IP origem",
+      "client": "Cliente",
+      "apiKey": "API Key",
+      "method": "Método",
+      "requestPath": "Request Path",
+      "publicEndpoint": "Endpoint público",
+      "gatewayRoute": "Gateway Route",
+      "destinationHost": "Host destino",
+      "destinationUrl": "Destination URL",
+      "destinationIp": "IP destino",
+      "errorCode": "Código",
+      "errorMessage": "Mensagem",
+      "requestHeaders": "Headers",
+      "responseHeaders": "Response Headers",
+      "requestQuery": "Query",
+      "requestBody": "Request Body",
+      "responseBody": "Response Body",
+      "requestSize": "Tamanho do request",
+      "responseSize": "Tamanho da resposta"
+    },
+    "flow": {
+      "title": "Fluxo da Requisição",
+      "sourceIp": "Origem",
+      "sourceHost": "Host de entrada",
+      "publicEndpoint": "Endpoint público",
+      "gatewayRoute": "Gateway Route",
+      "destinationHost": "Destino",
+      "destinationIp": "IP destino"
+    }
+  }
+}
