@@ -4,6 +4,7 @@ import { useTranslation } from 'react-i18next';
 import { HeroImage } from '@/components/branding/hero-image';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { ApiStatusCard } from '@/features/api-status/api-status-card';
+import { useBranding } from '@/features/branding/branding.hooks';
 
 const HOME_CARDS = [
   { key: 'security', icon: Shield },
@@ -16,6 +17,7 @@ const HOME_CARDS = [
 
 export function HomePage() {
   const { t } = useTranslation();
+  const { branding } = useBranding();
 
   return (
     <div className="mx-auto flex min-h-full max-w-375 flex-col gap-5 p-6">
@@ -25,9 +27,11 @@ export function HomePage() {
         </div>
 
         <div className="space-y-3 text-center lg:order-1 lg:text-left">
-          <h1 className="text-4xl font-bold text-foreground">{t('home.title')}</h1>
+          <h1 className="text-4xl font-bold text-foreground">{branding.applicationName}</h1>
           <p className="text-lg font-medium text-primary">{t('home.subtitle')}</p>
-          <p className="text-base leading-relaxed text-muted">{t('home.description')}</p>
+          <p className="text-base leading-relaxed text-muted">
+            {t('home.description', { name: branding.applicationName })}
+          </p>
         </div>
       </section>
 

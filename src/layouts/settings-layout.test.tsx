@@ -36,6 +36,14 @@ describe('SettingsLayout', () => {
     expect(screen.getByText('Certificates page content')).toBeInTheDocument();
   });
 
+  it('shows a Swagger link, opposite the title/description, opening the real API docs in a new tab', () => {
+    renderAt('/settings/certificates');
+    const link = screen.getByRole('link', { name: /Swagger/ });
+    expect(link).toHaveAttribute('href', 'http://localhost:3110/docs');
+    expect(link).toHaveAttribute('target', '_blank');
+    expect(link).toHaveAttribute('rel', 'noopener noreferrer');
+  });
+
   it('never adds its own vertical scroll container around the sidebar+content region', () => {
     const { container } = renderAt('/settings/certificates');
     expect(container.innerHTML).not.toMatch(/overflow-y-auto/);

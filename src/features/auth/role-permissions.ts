@@ -83,6 +83,17 @@ import type { RoleCode } from '@/features/auth/auth.types';
  * `trustedCas.create`/`trustedCas.status`/`trustedCas.delete` gate the
  * per-action UI within it. All are granted to ADMIN only via the `'*'`
  * wildcard — deliberately absent from every other role's array.
+ *
+ * `branding.update` — the Personalização page (`/settings/personalization`,
+ * added alongside Certificados) mirrors `BrandingAdminController`'s
+ * `@ApiBearerAuth` write endpoints (name/logo/favicon/brand-image
+ * upload+remove) — **ADMIN only, no exceptions**, same pattern as
+ * `trustedCas.*` above. The page itself is already gated by `settings.read`
+ * (ADMIN-only wildcard), so `branding.update` only needs to gate the
+ * write-action UI (form submit, upload/remove buttons) within it; there is
+ * no `branding.read` — the underlying `GET /branding` is a public,
+ * unauthenticated endpoint by design (Sidebar/Home/Login need it before
+ * login), so read access is never permission-gated on the frontend.
  */
 export const ROLE_PERMISSIONS: Record<RoleCode, string[]> = {
   ADMIN: ['*'],

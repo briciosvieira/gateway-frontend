@@ -1,7 +1,4 @@
 {
-  "app": {
-    "name": "Gateway Hub LF"
-  },
   "common": {
     "actions": {
       "delete": "Eliminar",
@@ -50,10 +47,9 @@
     "backHome": "Volver al inicio"
   },
   "home": {
-    "title": "Gateway Hub LF",
     "subtitle": "Integraciones seguras, centralizadas y bajo control.",
-    "description": "Gateway Hub LF protege la comunicación entre sistemas externos y aplicaciones internas, centralizando autenticación, rutas, API Keys, control de IPs, auditoría y monitoreo en una sola plataforma.",
-    "heroAlt": "Mascota de Gateway Hub LF",
+    "description": "{{name}} protege la comunicación entre sistemas externos y aplicaciones internas, centralizando autenticación, rutas, API Keys, control de IPs, auditoría y monitoreo en una sola plataforma.",
+    "heroAlt": "Mascota de {{name}}",
     "cards": {
       "security": {
         "title": "Seguridad",
@@ -120,7 +116,7 @@
   "auth": {
     "login": {
       "title": "Iniciar sesión",
-      "subtitle": "Accede al panel administrativo de Gateway Hub LF.",
+      "subtitle": "Accede al panel administrativo de {{name}}.",
       "loginLabel": "Usuario o correo electrónico",
       "passwordLabel": "Contraseña",
       "submit": "Iniciar sesión",
@@ -169,7 +165,7 @@
   },
   "dashboard": {
     "title": "Dashboard",
-    "subtitle": "Resumen de Gateway Hub LF en el período seleccionado.",
+    "subtitle": "Resumen del período seleccionado.",
     "notAvailable": "—",
     "filters": {
       "period": {
@@ -298,7 +294,7 @@
   },
   "users": {
     "title": "Usuarios",
-    "description": "Gestione los usuarios administrativos del Gateway Hub LF.",
+    "description": "Gestione los usuarios administrativos.",
     "new": "Nuevo usuario",
     "search": "Buscar por nombre, usuario o correo",
     "empty": "Ningún usuario encontrado.",
@@ -401,7 +397,7 @@
   },
   "clients": {
     "title": "Clientes",
-    "description": "Gestione los clientes del Gateway Hub LF.",
+    "description": "Gestione los clientes.",
     "new": "Nuevo cliente",
     "search": "Buscar por nombre, identificador, contacto o correo",
     "empty": "Ningún cliente encontrado.",
@@ -485,7 +481,7 @@
   },
   "apiKeys": {
     "title": "API Keys",
-    "description": "Gestione las claves de API del Gateway Hub LF.",
+    "description": "Gestione las claves de API.",
     "new": "Nueva API Key",
     "search": "Buscar por nombre o cliente",
     "empty": "Ninguna API Key encontrada.",
@@ -609,7 +605,7 @@
   },
   "allowedIps": {
     "title": "Allowed IPs",
-    "description": "Gestione las IPs y redes permitidas del Gateway Hub LF.",
+    "description": "Gestione las IPs y redes permitidas.",
     "new": "Nuevo Allowed IP",
     "search": "Buscar por dirección, descripción o cliente",
     "empty": "Ningún Allowed IP encontrado.",
@@ -714,7 +710,7 @@
   },
   "gatewayRoutes": {
     "title": "Gateway Routes",
-    "description": "Gestione las rutas públicas del Gateway Hub LF.",
+    "description": "Gestione las rutas públicas del Gateway.",
     "new": "Nueva ruta",
     "search": "Buscar por nombre, slug, cliente o destino",
     "empty": "Ninguna ruta encontrada.",
@@ -924,9 +920,11 @@
   "settings": {
     "title": "Configuración",
     "description": "Gestione las configuraciones administrativas del Gateway.",
+    "swaggerLink": "Swagger",
     "nav": {
       "label": "Menú de configuración",
-      "certificates": "Certificados"
+      "certificates": "Certificados",
+      "personalization": "Personalización"
     },
     "certificates": {
       "title": "Certificados",
@@ -1023,6 +1021,63 @@
         "alreadyExists": "Este certificado ya fue registrado.",
         "fileTooLarge": "El archivo excede el tamaño máximo permitido (1 MB).",
         "invalidUpload": "Envíe el certificado en una solicitud multipart válida, con nombre y archivo."
+      }
+    },
+    "personalization": {
+      "title": "Personalización",
+      "subtitle": "Identidad visual",
+      "description": "Personalice el nombre, logotipo, favicon e imagen principal de la aplicación.",
+      "usingDefault": "Usando el valor predeterminado de la aplicación",
+      "noCustomImage": "Ninguna imagen personalizada",
+      "name": {
+        "title": "Nombre de la aplicación",
+        "label": "Nombre de la aplicación"
+      },
+      "logo": {
+        "title": "Logo de la aplicación",
+        "formats": "Formatos aceptados: PNG, JPEG, WebP, SVG (hasta 2 MB)",
+        "removeTitle": "¿Eliminar el logo personalizado?",
+        "removeDescription": "La aplicación volverá a utilizar el logo predeterminado."
+      },
+      "favicon": {
+        "title": "Favicon",
+        "formats": "Formatos aceptados: PNG, JPEG, WebP, SVG, ICO (hasta 512 KB)",
+        "removeTitle": "¿Eliminar el favicon personalizado?",
+        "removeDescription": "La aplicación volverá a utilizar el favicon predeterminado."
+      },
+      "brandImage": {
+        "title": "Imagen principal",
+        "formats": "Formatos aceptados: PNG, JPEG, WebP, SVG (hasta 10 MB)",
+        "removeTitle": "¿Eliminar la imagen principal personalizada?",
+        "removeDescription": "La aplicación volverá a utilizar la imagen predeterminada."
+      },
+      "actions": {
+        "replace": "Sustituir",
+        "remove": "Eliminar",
+        "resetToDefault": "Restablecer valor predeterminado",
+        "save": "Guardar cambios"
+      },
+      "form": {
+        "errors": {
+          "nameLength": "El nombre debe tener entre 2 y 100 caracteres.",
+          "nameInvalidChars": "El nombre no puede contener los caracteres < o >."
+        }
+      },
+      "success": {
+        "nameSaved": "Cambios guardados.",
+        "logoUpdated": "Logo actualizado.",
+        "faviconUpdated": "Favicon actualizado.",
+        "imageUpdated": "Imagen actualizada.",
+        "logoRemoved": "Logo eliminado.",
+        "faviconRemoved": "Favicon eliminado.",
+        "imageRemoved": "Imagen eliminada."
+      },
+      "errors": {
+        "nameUpdateFailed": "No fue posible actualizar el nombre.",
+        "imageUpdateFailed": "No fue posible actualizar la imagen.",
+        "invalidFile": "Archivo inválido.",
+        "unsupportedFormat": "Formato no compatible.",
+        "fileTooLarge": "Archivo demasiado grande."
       }
     }
   },

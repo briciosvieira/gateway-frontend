@@ -17,6 +17,7 @@ import { PlaceholderPage } from '@/pages/placeholder/placeholder-page';
 import { RequestLogsPage } from '@/pages/request-logs/request-logs-page';
 import { RouteHeadersPage } from '@/pages/route-headers/route-headers-page';
 import { CertificatesPage } from '@/pages/settings/certificates-page';
+import { PersonalizationPage } from '@/pages/settings/personalization-page';
 import { UsersPage } from '@/pages/users/users-page';
 import { FirstLoginRoute } from '@/routes/first-login-route';
 import { NAV_ITEMS } from '@/routes/nav-items';
@@ -88,6 +89,7 @@ export const appRouter = createBrowserRouter([
                 children: [
                   { index: true, element: <Navigate to="/settings/certificates" replace /> },
                   { path: 'certificates', element: <CertificatesPage /> },
+                  { path: 'personalization', element: <PersonalizationPage /> },
                 ],
               },
             ],

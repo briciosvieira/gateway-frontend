@@ -1,4 +1,4 @@
-import { FileKey } from 'lucide-react';
+import { FileKey, Palette } from 'lucide-react';
 
 import type { NavItem } from '@/types/navigation';
 
@@ -15,5 +15,11 @@ export const SETTINGS_NAV_ITEMS: NavItem[] = [
     labelKey: 'settings.nav.certificates',
     path: 'certificates',
     icon: FileKey,
+  },
+  {
+    key: 'personalization',
+    labelKey: 'settings.nav.personalization',
+    path: 'personalization',
+    icon: Palette,
   },
 ];

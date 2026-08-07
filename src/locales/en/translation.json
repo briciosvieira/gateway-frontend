@@ -1,7 +1,4 @@
 {
-  "app": {
-    "name": "Gateway Hub LF"
-  },
   "common": {
     "actions": {
       "delete": "Delete",
@@ -50,10 +47,9 @@
     "backHome": "Return to home"
   },
   "home": {
-    "title": "Gateway Hub LF",
     "subtitle": "Secure, centralized and controlled integrations.",
-    "description": "Gateway Hub LF protects communication between external systems and internal applications by centralizing authentication, routes, API Keys, IP control, auditing and monitoring in a single platform.",
-    "heroAlt": "Gateway Hub LF mascot",
+    "description": "{{name}} protects communication between external systems and internal applications by centralizing authentication, routes, API Keys, IP control, auditing and monitoring in a single platform.",
+    "heroAlt": "{{name}} mascot",
     "cards": {
       "security": {
         "title": "Security",
@@ -120,7 +116,7 @@
   "auth": {
     "login": {
       "title": "Sign in",
-      "subtitle": "Access the Gateway Hub LF admin panel.",
+      "subtitle": "Access the {{name}} admin panel.",
       "loginLabel": "Username or email",
       "passwordLabel": "Password",
       "submit": "Sign in",
@@ -169,7 +165,7 @@
   },
   "dashboard": {
     "title": "Dashboard",
-    "subtitle": "Overview of Gateway Hub LF for the selected period.",
+    "subtitle": "Overview for the selected period.",
     "notAvailable": "—",
     "filters": {
       "period": {
@@ -298,7 +294,7 @@
   },
   "users": {
     "title": "Users",
-    "description": "Manage the Gateway Hub LF administrative users.",
+    "description": "Manage the administrative users.",
     "new": "New user",
     "search": "Search by name, username or email",
     "empty": "No users found.",
@@ -401,7 +397,7 @@
   },
   "clients": {
     "title": "Clients",
-    "description": "Manage the Gateway Hub LF clients.",
+    "description": "Manage the clients.",
     "new": "New client",
     "search": "Search by name, identifier, contact or email",
     "empty": "No clients found.",
@@ -485,7 +481,7 @@
   },
   "apiKeys": {
     "title": "API Keys",
-    "description": "Manage the Gateway Hub LF API keys.",
+    "description": "Manage the API keys.",
     "new": "New API Key",
     "search": "Search by name or client",
     "empty": "No API Keys found.",
@@ -609,7 +605,7 @@
   },
   "allowedIps": {
     "title": "Allowed IPs",
-    "description": "Manage the Gateway Hub LF allowed IPs and networks.",
+    "description": "Manage the allowed IPs and networks.",
     "new": "New Allowed IP",
     "search": "Search by address, description or client",
     "empty": "No Allowed IPs found.",
@@ -714,7 +710,7 @@
   },
   "gatewayRoutes": {
     "title": "Gateway Routes",
-    "description": "Manage the Gateway Hub LF public routes.",
+    "description": "Manage the Gateway's public routes.",
     "new": "New route",
     "search": "Search by name, slug, client or destination",
     "empty": "No routes found.",
@@ -924,9 +920,11 @@
   "settings": {
     "title": "Settings",
     "description": "Manage the Gateway's administrative settings.",
+    "swaggerLink": "Swagger",
     "nav": {
       "label": "Settings menu",
-      "certificates": "Certificates"
+      "certificates": "Certificates",
+      "personalization": "Personalization"
     },
     "certificates": {
       "title": "Certificates",
@@ -1023,6 +1021,63 @@
         "alreadyExists": "This certificate has already been registered.",
         "fileTooLarge": "The file exceeds the maximum allowed size (1 MB).",
         "invalidUpload": "Submit the certificate as a valid multipart request with name and file."
+      }
+    },
+    "personalization": {
+      "title": "Personalization",
+      "subtitle": "Visual identity",
+      "description": "Customize the application's name, logo, favicon and main image.",
+      "usingDefault": "Using the application default",
+      "noCustomImage": "No custom image",
+      "name": {
+        "title": "Application name",
+        "label": "Application name"
+      },
+      "logo": {
+        "title": "Application logo",
+        "formats": "Accepted formats: PNG, JPEG, WebP, SVG (up to 2 MB)",
+        "removeTitle": "Remove custom logo?",
+        "removeDescription": "The application will go back to using the default logo."
+      },
+      "favicon": {
+        "title": "Favicon",
+        "formats": "Accepted formats: PNG, JPEG, WebP, SVG, ICO (up to 512 KB)",
+        "removeTitle": "Remove custom favicon?",
+        "removeDescription": "The application will go back to using the default favicon."
+      },
+      "brandImage": {
+        "title": "Main image",
+        "formats": "Accepted formats: PNG, JPEG, WebP, SVG (up to 10 MB)",
+        "removeTitle": "Remove custom main image?",
+        "removeDescription": "The application will go back to using the default image."
+      },
+      "actions": {
+        "replace": "Replace",
+        "remove": "Remove",
+        "resetToDefault": "Reset to default",
+        "save": "Save changes"
+      },
+      "form": {
+        "errors": {
+          "nameLength": "The name must be between 2 and 100 characters.",
+          "nameInvalidChars": "The name cannot contain the characters < or >."
+        }
+      },
+      "success": {
+        "nameSaved": "Changes saved.",
+        "logoUpdated": "Logo updated.",
+        "faviconUpdated": "Favicon updated.",
+        "imageUpdated": "Image updated.",
+        "logoRemoved": "Logo removed.",
+        "faviconRemoved": "Favicon removed.",
+        "imageRemoved": "Image removed."
+      },
+      "errors": {
+        "nameUpdateFailed": "Unable to update the name.",
+        "imageUpdateFailed": "Unable to update the image.",
+        "invalidFile": "Invalid file.",
+        "unsupportedFormat": "Unsupported format.",
+        "fileTooLarge": "File too large."
       }
     }
   },

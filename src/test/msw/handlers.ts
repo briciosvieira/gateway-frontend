@@ -102,4 +102,20 @@ export const handlers = [
   http.post(`${BASE}/auth/logout`, () => new HttpResponse(null, { status: 204 })),
 
   http.post(`${BASE}/auth/change-password`, () => new HttpResponse(null, { status: 204 })),
+
+  // Public branding is fetched by Sidebar/Home/Login/document-title effects
+  // regardless of the page under test — a default handler here means
+  // individual test files only need `server.use(...)` when they actually
+  // care about custom branding, exactly like every other module.
+  http.get(`${BASE}/branding`, () =>
+    HttpResponse.json(
+      successBody({
+        applicationName: 'Gateway',
+        logoUrl: null,
+        faviconUrl: null,
+        brandImageUrl: null,
+        updatedAt: null,
+      }),
+    ),
+  ),
 ];

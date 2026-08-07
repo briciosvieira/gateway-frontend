@@ -10,12 +10,14 @@ import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
 import { Sheet, SheetContent, SheetTitle, SheetTrigger } from '@/components/ui/sheet';
 import { usePermissions } from '@/features/auth/use-permissions';
+import { useBranding } from '@/features/branding/branding.hooks';
 import { NAV_ITEMS } from '@/routes/nav-items';
 
 export function MobileSidebar() {
   const [open, setOpen] = useState(false);
   const { t } = useTranslation();
   const { hasPermission } = usePermissions();
+  const { branding } = useBranding();
 
   const visibleNavItems = NAV_ITEMS.filter(
     (item) => !item.permission || hasPermission(item.permission),
@@ -30,7 +32,7 @@ export function MobileSidebar() {
       </SheetTrigger>
 
       <SheetContent side="left" className="w-72 p-0">
-        <SheetTitle className="sr-only">{t('app.name')}</SheetTitle>
+        <SheetTitle className="sr-only">{branding.applicationName}</SheetTitle>
 
         <div className="flex h-16 items-center px-3">
           <AppLogo />

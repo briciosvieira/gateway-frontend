@@ -1,3 +1,4 @@
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import { HttpResponse, http } from 'msw';
 import { MemoryRouter, Route, Routes } from 'react-router-dom';
@@ -24,19 +25,22 @@ function successBody<T>(data: T) {
 }
 
 function renderLoginPage() {
+  const queryClient = new QueryClient({ defaultOptions: { queries: { retry: false } } });
   return render(
     <ThemeProvider>
-      <MemoryRouter initialEntries={['/login']}>
-        <AuthProvider>
-          <Routes>
-            <Route element={<PublicRoute />}>
-              <Route path="/login" element={<LoginPage />} />
-            </Route>
-            <Route path="/change-password" element={<div>Change password page</div>} />
-            <Route path="/" element={<div>Home page</div>} />
-          </Routes>
-        </AuthProvider>
-      </MemoryRouter>
+      <QueryClientProvider client={queryClient}>
+        <MemoryRouter initialEntries={['/login']}>
+          <AuthProvider>
+            <Routes>
+              <Route element={<PublicRoute />}>
+                <Route path="/login" element={<LoginPage />} />
+              </Route>
+              <Route path="/change-password" element={<div>Change password page</div>} />
+              <Route path="/" element={<div>Home page</div>} />
+            </Routes>
+          </AuthProvider>
+        </MemoryRouter>
+      </QueryClientProvider>
     </ThemeProvider>,
   );
 }

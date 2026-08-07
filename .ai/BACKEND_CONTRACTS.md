@@ -133,70 +133,36 @@ No aggregate/summary endpoint exists (e.g. no `GET /api-keys/clients-summary`) �
 - API Key creation modal shows the public Gateway base only.
 - Full endpoint is shown in Gateway Routes.
 
-## Missing: per-client aggregate endpoints for API Keys / Allowed IPs / Gateway Routes (2026-08-07, spec refined 2026-08-07)
+## Per-client aggregate endpoints for API Keys / Allowed IPs / Gateway Routes — CONFIRMED IMPLEMENTED (backend delivered 2026-08-07, frontend consumption completed 2026-08-07)
 
-Investigated for a "group the main list by client" frontend reorganization (API Keys, Allowed IPs, Gateway Routes). **Confirmed absent** — no scalable per-client aggregate/summary endpoint exists for any of the three modules:
+Originally specified here as "Missing" (2026-08-07) after confirming no aggregate endpoint existed and that the "hide empty clients + exact server-side pagination + resource-derived status" combination was mathematically impossible from the frontend alone (see git history of this file for the full impossibility proof, kept out of this version for brevity). The backend team implemented the endpoints exactly as specified; the real contract (confirmed against the running backend, 2026-08-07) matches the original spec almost verbatim.
 
-- No `GET /api-keys/clients-summary`, `GET /allowed-ips/clients-summary`, `GET /gateway-routes/clients-summary` or equivalent — confirmed by reading all three controllers in full.
-- `GET /clients` / `GET /clients/:id` (`clientSelect` in `clients.service.ts`) returns no `_count`/`apiKeysCount`/`allowedIpsCount`/`gatewayRoutesCount` — just `{id, name, code, description, contactName, contactEmail, active, createdAt, updatedAt}`.
-- The only `_count`/`groupBy`/Prisma-aggregate usage anywhere in the backend is `dashboard.service.ts`, and every one of those aggregates operates on `RequestLog` (traffic stats) — never on API Keys/Allowed IPs/Gateway Routes counts per client.
-- `DELETE /clients/:id`'s dependency check (`CLIENT_HAS_DEPENDENCIES`) does run three `prisma.*.count({ where: { clientId } })` calls, but that's a one-off, single-client check at delete time — not a reusable, paginated, multi-client summary endpoint.
-
-**Current frontend state (implemented, 2026-08-07):** the three main pages (`api-keys-page.tsx`, `allowed-ips-page.tsx`, `gateway-routes-page.tsx`) list **every** client (via the real, paginated `GET /clients`), regardless of whether it has any resources, with no Total/Ativos/Inativos columns — the "Status" column shown there is currently `client.active` (the client's own status), not a resource-derived one. Selecting a client opens a `*ClientDrawer` that queries the real `GET /api-keys|allowed-ips|gateway-routes?clientId=<id>` — unchanged, already scalable, already paginated server-side. See "Frontend architecture" note in `.ai/FRONTEND_ARCHITECTURE.md`.
-
-**Blocked refinement (2026-08-07):** product wants two changes to the main view that this data shape cannot support: (1) hide clients with zero resources for that feature, (2) show a resource-derived status (Ativo = ≥1 active resource; Inativo = has resources but none active; API Key `revokedAt` never counts as active) instead of `client.active`. Both changes together also require **exact server-side pagination** over the *filtered* set. This combination is mathematically impossible to do correctly from the frontend alone: the "has ≥1 resource" filter can only be applied to a client after querying its resources, but by then `GET /clients`'s pagination boundary has already been decided on the *unfiltered* set — the client that should fill a gap left by a filtered-out client lives on a different page and can't be pulled in without knowing the filter outcome first. Loading everything or querying per-client (N+1) were both explicitly ruled out as scale-breaking. **No frontend changes were made for this refinement; the client-list main view described above is the frontend's current end state until the endpoint below exists.**
-
-### Endpoints needed (conceptual, NOT implemented — full spec for whoever picks up the backend task)
-
-Paths (matching this backend's existing nested-action convention, e.g. `POST /api-keys/:id/revoke`):
+**Paths** (unchanged from spec):
 ```
 GET /api-keys/clients-summary
 GET /allowed-ips/clients-summary
 GET /gateway-routes/clients-summary
 ```
-**NestJS routing gotcha:** the `clients-summary` route handler must be declared *before* the `:id` handler in each controller class — NestJS matches routes in declaration order, so `:id` declared first would swallow `clients-summary` as a literal id and fail `ParseUUIDPipe` with a 400.
+Confirmed live: unauthenticated `curl` against all three returns `401 Unauthorized` with the standard error envelope (not `404`), proving the routes exist and are guarded, and that `clients-summary` is correctly declared before `:id` in each controller (no `ParseUUIDPipe` 400).
 
-**Roles:** identical to each module's existing list endpoint — `ADMIN, OPERATOR, VIEWER, AUDITOR` for all three. No permission model changes.
+**Roles:** `ADMIN, OPERATOR, VIEWER, AUDITOR` — identical to each module's existing list endpoint.
 
-**Query params (identical across all three — one shared DTO, e.g. `FindClientsSummaryQueryDto`):**
-| Param | Type | Default | Notes |
-|---|---|---|---|
-| `page` | int | `1` | |
-| `limit` | int | `20` (max `100`) | |
-| `search?` | string | — | matches `client.name`/`client.code`, same semantics as `GET /clients?search=` |
-| `status?` | `'active' \| 'inactive'` | — | **aggregate** status: `active` = client has ≥1 active resource; `inactive` = client has resources but none active. Omitted = all clients with ≥1 resource |
-| `sortBy?` | `'clientName' \| 'total' \| 'active'` | `'clientName'` | |
-| `sortOrder?` | `'asc' \| 'desc'` | `'asc'` | |
+**Query params (common):** `page`, `limit`, `search?` (matches `client.name`/`client.code`), `status?` (`'active' | 'inactive'` — aggregate status, omit for all), `sortOrder?` (`'asc' | 'desc'`). `sortBy?` is **per-feature**, not shared:
+- API Keys: `'clientName' | 'total' | 'active' | 'inactive' | 'revoked'`
+- Allowed IPs / Gateway Routes: `'clientName' | 'total' | 'active' | 'inactive'`
 
-No `clientId` param here — that stays exclusive to the existing per-resource list endpoints used by the Drawer.
+No `clientId` param — that stays exclusive to the existing per-resource list endpoints used by the Drawer (`GET /api-keys|allowed-ips|gateway-routes?clientId=<id>`, unchanged).
 
-**Response** (real envelope, `data`):
+**Response** (standard envelope, `data.items`/`data.pagination`/`data.filters`; `pagination.total` counts **grouped clients**, not raw resources):
 ```ts
-{
-  items: ClientResourceSummary[],
-  pagination: { page, limit, total, totalPages },
-  filters: { search?, status?, sortBy, sortOrder },
-}
+// API Keys
+{ client: { id, name, code, active }, total, active, inactive, revoked }
+// Allowed IPs / Gateway Routes (no revoke concept)
+{ client: { id, name, code, active }, total, active, inactive }
 ```
-`ClientResourceSummary` for API Keys:
-```ts
-{
-  client: { id, name, code, active },
-  total,    // count of all ApiKeys for the client
-  active,   // active = true AND revokedAt IS NULL
-  inactive, // active = false AND revokedAt IS NULL — never overlaps with revoked
-  revoked,  // revokedAt IS NOT NULL
-}
-```
-`total === active + inactive + revoked`. For Allowed IPs/Gateway Routes (no revoke concept): `{ client, total, active, inactive }` with `total === active + inactive`. **Only clients with `total >= 1` are ever returned** — this is what replaces "hide client with zero resources".
+Confirmed business rules: clients with zero resources for that feature never appear; `status=active` ⟺ `active > 0`; `status=inactive` ⟺ `total > 0 && active === 0`; an API Key counts as `active` only if `active: true && revokedAt: null &&` not expired (a revoked key never counts, regardless of `active`); old CRUD/list endpoints are unchanged; backend guarantees no N+1.
 
-**Query strategy (conceptual):** Prisma's `groupBy` can't express conditional aggregation (active vs. revoked counts) joined with `Client` for search/sort in one call, so this needs a raw parametrized SQL query (`prisma.$queryRaw` tagged template) per endpoint: `JOIN Client → resource table`, `GROUP BY client.id`, conditional `COUNT(*) FILTER (WHERE ...)` (Postgres) for each bucket, `HAVING COUNT(resource.id) > 0` (plus the `status` filter's own `HAVING` condition when present) *before* `ORDER BY`/`LIMIT`/`OFFSET` — this is what keeps pagination exact against the already-filtered set. A second raw query (same `WHERE`/`HAVING`, wrapped in `SELECT COUNT(*) FROM (...) t`, no `LIMIT`/`OFFSET`) gives `pagination.total`. Same `Promise.all([dataQuery, countQuery])` shape already used everywhere else in this backend, just with raw SQL as the data query. **Always add a unique-column tiebreaker to `ORDER BY` (e.g. `client.id`)** — this is the exact non-deterministic-pagination bug already found and fixed once for Request Logs' `buildOrderBy` (see the "Backend fix — non-deterministic sort order" note above); the same fix must be built in from the start here.
-
-**Indexes to confirm/add:** `clientId` on each resource table (likely already present, since `?clientId=` filtering already works); composite `(clientId, active, revokedAt)` for `ApiKey` and `(clientId, active)` for `AllowedIp`/`GatewayRoute` to keep the conditional aggregation index-backed; `Client(name)`/`Client(code)` for the `search` `ILIKE` (likely already present given `GET /clients?search=` already works).
-
-**Full example SQL sketch, N+1/load-all/pagination-exactness reasoning, and the frontend consumption plan once this exists** are written out in detail in the session scratchpad spec — ask if you need the complete worked example reproduced here.
-
-Once this endpoint exists: the three main pages swap `useClients(params)` for a new `use{Feature}ClientsSummary(params)` hook hitting it; `ClientResourceListTable` (already built, shared) takes `ClientResourceSummary[]` instead of `Client[]` and derives the Status badge from `row.active > 0` instead of `row.client.active`; the `status` filter sends `status=active|inactive` to the new endpoint instead of `active=true|false` to `GET /clients`. The Drawer and every one of its existing actions (create/edit/status/revoke/regenerate/delete) are untouched — they already query the real per-resource `?clientId=<id>` endpoints correctly.
+**Frontend consumption (implemented 2026-08-07):** see "Client-scoped resource views" in `.ai/FRONTEND_ARCHITECTURE.md` for the full final architecture. Summary: each feature's `.hooks.ts` gained `use{Feature}ClientsSummary(params)` (+ its own query-key namespace) consuming the endpoint above; every existing mutation hook (create/update/status/revoke/regenerate/delete) now also invalidates that summary query key on success, so create/delete/activate/deactivate on the drawer's clientId-scoped list automatically keeps the main clients-summary view in sync — no `window.location.reload()` anywhere. `ClientResourceListTable` was made generic (`getClient`/`isActive`/`renderCounts` props) to consume the summary row shape and derive STATUS from `active > 0`, never `client.active`. A new shared `ClientResourceSummaryFilters` component replaced the reused `ClientFilters` (Clients module) on these three main pages, since the summary endpoints' `sortBy` options don't match `ClientsFilterState`'s.
 
 ## Allowed IPs
 
@@ -849,3 +815,39 @@ Fixed (explicit user authorization to touch the backend for this): added a `MULT
 - The certificate's raw/PEM content is never requested, stored, logged, or rendered anywhere in the UI: no Download, "Ver certificado bruto", "Copiar PEM", "Exportar certificado" or Edit action exists for Trusted CAs.
 - No frontend option to bypass/ignore TLS validation exists anywhere in the app (`Ignorar SSL/TLS`, `Aceitar certificado inválido`, `rejectUnauthorized: false` or equivalent) — this was a hard requirement, verified by dedicated tests asserting the absence of such strings in the rendered UI.
 - The three-state validity badge (Válido/Expirando/Expirado) is computed client-side (`getCertificateValidityStatus`, 30-day "expiring soon" threshold) purely for display — it never touches `active` and is never sent to the backend; the real `validity` query filter only ever offers the two real backend values (`valid`/`expired`).
+
+## Branding — confirmed implemented (2026-08-07)
+
+Not documented here before this task — the backend had already shipped it, so the real contract was confirmed live against `GET /docs-json` (per `AGENTS.md`'s rule: consult the backend directly when a contract is absent from this file) rather than sourced from a prior spec.
+
+**Paths:**
+```
+GET    /branding                     — public, no auth (BrandingPublicController)
+PATCH  /branding                     — ADMIN (bearer), updates applicationName
+POST   /branding/logo                — ADMIN, multipart/form-data, field "file"
+DELETE /branding/logo                — ADMIN
+POST   /branding/favicon             — ADMIN, multipart/form-data, field "file"
+DELETE /branding/favicon             — ADMIN
+POST   /branding/brand-image         — ADMIN, multipart/form-data, field "file"
+DELETE /branding/brand-image         — ADMIN
+GET    /branding/assets/logo         — public, binary (image/png|jpeg|webp|svg+xml), 404 if unset
+GET    /branding/assets/favicon      — public, binary (+ image/x-icon, image/vnd.microsoft.icon), 404 if unset
+GET    /branding/assets/brand-image  — public, binary, 404 if unset
+```
+Every JSON-returning endpoint above (`GET /branding`, `PATCH /branding`, and every asset `POST`/`DELETE`) returns the exact same shape wrapped in the standard envelope:
+```ts
+{ applicationName: string, logoUrl: string | null, faviconUrl: string | null, brandImageUrl: string | null, updatedAt: string | null }
+```
+`logoUrl`/`faviconUrl`/`brandImageUrl` are paths relative to the backend's own origin (e.g. `/api/v1/branding/assets/logo?v=abc123`), already cache-busted by the backend via a query param — never assume they're relative to `apiClient`'s `/api/v1` baseURL for direct `<img src>`/`<link href>` use; resolve against the API's origin instead (see `branding.service.ts`).
+
+`PATCH /branding` body: `{ applicationName: string }`, 2–100 chars (`UpdateBrandingDto`).
+
+Real per-asset upload limits (`BRANDING_UPLOAD_LIMITS` in the backend's `src/modules/branding/branding.constants.ts`, confirmed against source): logo 2 MB, favicon 512 KB, brand image 10 MB (raised from the original 5 MB on 2026-08-07 at product's request — the frontend's `BRANDING_BRAND_IMAGE_MAX_SIZE_BYTES` must always mirror this exact value). Oversized/unsupported uploads return `413`/`400` respectively; the frontend does a client-side pre-check mirroring these same limits for instant feedback, but the backend remains the sole authority.
+
+Global, installation-wide — there is no per-user or per-client branding, and no separate "admin" read endpoint; `GET /branding` (public) is the only read path, used by both the public app chrome (Sidebar/Home/Login) and the admin Personalização page.
+
+### Backend bugs found and fixed during live verification (2026-08-07, all explicitly authorized)
+
+1. **415 on every upload**: `MULTIPART_ROUTES` in `security-hooks.ts` only allowlisted `POST /api/v1/trusted-cas` for `multipart/form-data` — the three new branding upload routes were rejected before reaching their controllers. Fixed by adding all three to the Set.
+2. **Oversized files escaped as an unhandled `FastifyError` instead of a clean 413**: `@fastify/multipart`'s `fileSize` limit is only actually enforced once the file stream is consumed (`file.toBuffer()`), not when `request.file()` resolves — `branding-admin.controller.ts`'s try/catch only wrapped the latter. Fixed by wrapping `toBuffer()` in the same `FST_REQ_FILE_TOO_LARGE` → `PayloadTooLargeException` handling.
+3. **Broken-image icon for every asset, even after a successful upload**: `@fastify/helmet` (registered globally in `main.ts`) sends `Cross-Origin-Resource-Policy: same-origin` by default on every response, which blocks a cross-origin `<img src>` load (the admin frontend runs on a different origin/port than the API, and potentially a different subdomain in production) even for these intentionally-public assets. Fixed by setting `cross-origin-resource-policy: cross-origin` only on the three `GET /branding/assets/*` responses (`branding-public.controller.ts`'s `sendAsset`) — the rest of the API's CORP policy is untouched.

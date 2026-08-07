@@ -16,6 +16,7 @@ function renderAt(path: string) {
       <Routes>
         <Route path="/settings" element={<SettingsSidebar />}>
           <Route path="certificates" element={<div />} />
+          <Route path="personalization" element={<div />} />
         </Route>
       </Routes>
     </MemoryRouter>,
@@ -36,6 +37,21 @@ describe('SettingsSidebar', () => {
     renderAt('/settings/certificates');
     const link = screen.getByRole('link', { name: 'Certificates' });
     expect(link.className).toMatch(/bg-primary\/15/);
+  });
+
+  it('renders Personalization immediately below Certificates', () => {
+    renderAt('/settings/certificates');
+    const links = screen.getAllByRole('link').map((link) => link.textContent);
+    expect(links).toEqual(['Certificates', 'Personalization']);
+  });
+
+  it('highlights Personalization as the active item when on that route', () => {
+    renderAt('/settings/personalization');
+    const link = screen.getByRole('link', { name: 'Personalization' });
+    expect(link.className).toMatch(/bg-primary\/15/);
+    expect(screen.getByRole('link', { name: 'Certificates' }).className).not.toMatch(
+      /bg-primary\/15/,
+    );
   });
 
   it('never adds its own vertical scroll container', () => {

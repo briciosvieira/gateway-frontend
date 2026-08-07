@@ -13,6 +13,7 @@ import { Input } from '@/components/ui/input';
 import { consumeSessionExpiredFlag } from '@/features/auth/auth-session-events';
 import { loginSchema, type LoginFormValues } from '@/features/auth/auth.schemas';
 import { useLogin } from '@/features/auth/use-login';
+import { useBranding } from '@/features/branding/branding.hooks';
 import { isApiError } from '@/lib/api/api-error';
 
 /**
@@ -36,6 +37,7 @@ function resolveLoginErrorKey(error: unknown): string {
 export function LoginPage() {
   const { t } = useTranslation();
   const { submit, isSubmitting, error } = useLogin();
+  const { branding } = useBranding();
   const [showSessionExpired] = useState(() => consumeSessionExpiredFlag());
 
   const {
@@ -62,7 +64,9 @@ export function LoginPage() {
         <div className="w-full max-w-sm space-y-6">
           <div className="space-y-1 text-center">
             <h1 className="text-2xl font-semibold">{t('auth.login.title')}</h1>
-            <p className="text-sm text-muted">{t('auth.login.subtitle')}</p>
+            <p className="text-sm text-muted">
+              {t('auth.login.subtitle', { name: branding.applicationName })}
+            </p>
           </div>
 
           {showSessionExpired && <SessionExpiredDialog />}

@@ -1,7 +1,4 @@
 {
-  "app": {
-    "name": "Gateway Hub LF"
-  },
   "common": {
     "actions": {
       "delete": "Excluir",
@@ -50,10 +47,9 @@
     "backHome": "Voltar para o início"
   },
   "home": {
-    "title": "Gateway Hub LF",
     "subtitle": "Integrações seguras, centralizadas e sob controle.",
-    "description": "O Gateway Hub LF protege a comunicação entre sistemas externos e aplicações internas, centralizando autenticação, rotas, API Keys, controle de IPs, auditoria e monitoramento em uma única plataforma.",
-    "heroAlt": "Mascote do Gateway Hub LF",
+    "description": "{{name}} protege a comunicação entre sistemas externos e aplicações internas, centralizando autenticação, rotas, API Keys, controle de IPs, auditoria e monitoramento em uma única plataforma.",
+    "heroAlt": "Mascote do {{name}}",
     "cards": {
       "security": {
         "title": "Segurança",
@@ -120,7 +116,7 @@
   "auth": {
     "login": {
       "title": "Entrar",
-      "subtitle": "Acesse o painel administrativo do Gateway Hub LF.",
+      "subtitle": "Acesse o painel administrativo da {{name}}.",
       "loginLabel": "Usuário ou e-mail",
       "passwordLabel": "Senha",
       "submit": "Entrar",
@@ -169,7 +165,7 @@
   },
   "dashboard": {
     "title": "Dashboard",
-    "subtitle": "Visão geral do Gateway Hub LF no período selecionado.",
+    "subtitle": "Visão geral no período selecionado.",
     "notAvailable": "—",
     "filters": {
       "period": {
@@ -298,7 +294,7 @@
   },
   "users": {
     "title": "Usuários",
-    "description": "Gerencie os usuários administrativos do Gateway Hub LF.",
+    "description": "Gerencie os usuários administrativos.",
     "new": "Novo usuário",
     "search": "Pesquisar por nome, usuário ou e-mail",
     "empty": "Nenhum usuário encontrado.",
@@ -401,7 +397,7 @@
   },
   "clients": {
     "title": "Clientes",
-    "description": "Gerencie os clientes do Gateway Hub LF.",
+    "description": "Gerencie os clientes.",
     "new": "Novo cliente",
     "search": "Pesquisar por nome, identificador, contato ou e-mail",
     "empty": "Nenhum cliente encontrado.",
@@ -485,7 +481,7 @@
   },
   "apiKeys": {
     "title": "API Keys",
-    "description": "Gerencie as chaves de API do Gateway Hub LF.",
+    "description": "Gerencie as chaves de API.",
     "new": "Nova API Key",
     "search": "Pesquisar por nome ou cliente",
     "empty": "Nenhuma API Key encontrada.",
@@ -609,7 +605,7 @@
   },
   "allowedIps": {
     "title": "Allowed IPs",
-    "description": "Gerencie os IPs e redes permitidos do Gateway Hub LF.",
+    "description": "Gerencie os IPs e redes permitidos.",
     "new": "Novo Allowed IP",
     "search": "Pesquisar por endereço, descrição ou cliente",
     "empty": "Nenhum Allowed IP encontrado.",
@@ -714,7 +710,7 @@
   },
   "gatewayRoutes": {
     "title": "Gateway Routes",
-    "description": "Gerencie as rotas públicas do Gateway Hub LF.",
+    "description": "Gerencie as rotas públicas do Gateway.",
     "new": "Nova rota",
     "search": "Pesquisar por nome, slug, cliente ou destino",
     "empty": "Nenhuma rota encontrada.",
@@ -924,9 +920,11 @@
   "settings": {
     "title": "Configurações",
     "description": "Gerencie as configurações administrativas do Gateway.",
+    "swaggerLink": "Swagger",
     "nav": {
       "label": "Menu de configurações",
-      "certificates": "Certificados"
+      "certificates": "Certificados",
+      "personalization": "Personalização"
     },
     "certificates": {
       "title": "Certificados",
@@ -1023,6 +1021,63 @@
         "alreadyExists": "Este certificado já foi cadastrado.",
         "fileTooLarge": "O arquivo excede o tamanho máximo permitido (1 MB).",
         "invalidUpload": "Envie o certificado em uma requisição multipart válida, com nome e arquivo."
+      }
+    },
+    "personalization": {
+      "title": "Personalização",
+      "subtitle": "Identidade visual",
+      "description": "Personalize o nome, logotipo, favicon e imagem principal da aplicação.",
+      "usingDefault": "Usando padrão da aplicação",
+      "noCustomImage": "Nenhuma imagem personalizada",
+      "name": {
+        "title": "Nome da aplicação",
+        "label": "Nome da aplicação"
+      },
+      "logo": {
+        "title": "Logo da aplicação",
+        "formats": "Formatos aceitos: PNG, JPEG, WebP, SVG (até 2 MB)",
+        "removeTitle": "Remover logo personalizada?",
+        "removeDescription": "A aplicação voltará a utilizar o logo padrão."
+      },
+      "favicon": {
+        "title": "Favicon",
+        "formats": "Formatos aceitos: PNG, JPEG, WebP, SVG, ICO (até 512 KB)",
+        "removeTitle": "Remover favicon personalizado?",
+        "removeDescription": "A aplicação voltará a utilizar o favicon padrão."
+      },
+      "brandImage": {
+        "title": "Imagem principal",
+        "formats": "Formatos aceitos: PNG, JPEG, WebP, SVG (até 10 MB)",
+        "removeTitle": "Remover imagem principal personalizada?",
+        "removeDescription": "A aplicação voltará a utilizar a imagem padrão."
+      },
+      "actions": {
+        "replace": "Substituir",
+        "remove": "Remover",
+        "resetToDefault": "Voltar ao padrão",
+        "save": "Salvar alterações"
+      },
+      "form": {
+        "errors": {
+          "nameLength": "O nome deve ter entre 2 e 100 caracteres.",
+          "nameInvalidChars": "O nome não pode conter os caracteres < ou >."
+        }
+      },
+      "success": {
+        "nameSaved": "Alterações salvas.",
+        "logoUpdated": "Logo atualizado.",
+        "faviconUpdated": "Favicon atualizado.",
+        "imageUpdated": "Imagem atualizada.",
+        "logoRemoved": "Logo removido.",
+        "faviconRemoved": "Favicon removido.",
+        "imageRemoved": "Imagem removida."
+      },
+      "errors": {
+        "nameUpdateFailed": "Não foi possível atualizar o nome.",
+        "imageUpdateFailed": "Não foi possível atualizar a imagem.",
+        "invalidFile": "Arquivo inválido.",
+        "unsupportedFormat": "Formato não suportado.",
+        "fileTooLarge": "Arquivo muito grande."
       }
     }
   },

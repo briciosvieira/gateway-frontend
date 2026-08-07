@@ -181,4 +181,11 @@ describe('roleHasPermission', () => {
     expect(roleHasPermission('AUDITOR', 'requestLogs.read')).toBe(true);
     expect(roleHasPermission('VIEWER', 'requestLogs.read')).toBe(false);
   });
+
+  it('grants branding.update only to ADMIN, same ADMIN-only-no-exceptions pattern as trustedCas.*', () => {
+    expect(roleHasPermission('ADMIN', 'branding.update')).toBe(true);
+    expect(roleHasPermission('OPERATOR', 'branding.update')).toBe(false);
+    expect(roleHasPermission('VIEWER', 'branding.update')).toBe(false);
+    expect(roleHasPermission('AUDITOR', 'branding.update')).toBe(false);
+  });
 });

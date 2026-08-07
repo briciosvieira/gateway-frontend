@@ -35,26 +35,35 @@ Two conventions coexist in this codebase; pick based on which the module more cl
 
 Query key shape either way: `{all, lists(), list(params), details(), detail(id)}`. Mutations invalidate `lists()` and either invalidate or `removeQueries` on `detail(id)` depending on whether the record can still exist after the mutation (status change → invalidate; delete → `removeQueries`).
 
-## Client-scoped resource views — API Keys / Allowed IPs / Gateway Routes (2026-08-07)
+## Client-scoped resource views — API Keys / Allowed IPs / Gateway Routes (final architecture, 2026-08-07)
 
-These three features' main pages were reorganized from "one row per resource" to "one row per client" (with potentially thousands of clients/resources, repeating the same client name on every row didn't scale visually). The pattern, identical across all three:
+These three features' main pages are organized "one row per client" (with potentially thousands of clients/resources, repeating the same client name on every row didn't scale visually), sourced from each feature's **`clients-summary` aggregate endpoint** — not `GET /clients`. Only clients with at least one resource for that feature ever appear (backend-enforced), and the main STATUS column is derived from the resource aggregate, never from the client entity's own `active` flag. The pattern, identical across all three:
 
 ```
 {Feature}Page (e.g. api-keys-page.tsx)
   ├─ PageHeader (unchanged title/description) + global "+ New X" button
   │    → opens the existing CreateXForm with a normal, user-editable client picker
-  ├─ ClientFilters (src/components/clients/client-filters.tsx — REUSED AS-IS,
-  │    not a new component; this page now paginates/searches/sorts CLIENTS,
-  │    via `useClients(params)`, exactly like the Clients page does)
+  ├─ ClientResourceSummaryFilters (src/components/shared/client-resource-summary-filters.tsx
+  │    — shared, presentation-only component wrapping the real summary query
+  │    params: search/status/sortBy/sortOrder. `sortBy` options differ per
+  │    feature (API Keys adds `revoked`) so they're passed in as a prop; all
+  │    labels are pre-translated by the caller, keeping the component
+  │    feature-agnostic. Backed by `use{Feature}ClientsSummary(params)`.)
   ├─ ClientResourceListTable (src/components/shared/client-resource-list-table.tsx
-  │    — new shared component: Cliente | Identificador | Status | Ações,
-  │    row click + an explicit "Ver X" button both call `onOpenClient`)
-  └─ {Feature}ClientDrawer (e.g. api-key-client-drawer.tsx — new per feature)
+  │    — generic over the summary row type: `getClient`/`isActive`/
+  │    `renderCounts` props. Cliente | Identificador | Status | Ações;
+  │    STATUS badge is `isActive(row)` — always `row.active > 0` in practice,
+  │    never `row.client.active`. `renderCounts` renders the optional compact
+  │    total/active/inactive[/revoked] text under the badge, worded per
+  │    feature via i18n. Row click + explicit "Ver X" button both call
+  │    `onOpenClient(client)`.)
+  └─ {Feature}ClientDrawer (e.g. api-key-client-drawer.tsx — per feature, UNCHANGED from the client-list iteration)
        ├─ Sheet + SheetContent (`sm:max-w-4xl`, wider than the default `w-72`)
        ├─ ClientResourceDrawerHeader (src/components/shared/client-resource-drawer-header.tsx
-       │    — new shared component: client name, code, and `client.active`
+       │    — shared component: client name, code, and `client.active`
        │    status, labeled "Status do cliente" — this is administrative
-       │    client info, NEVER the resource-derived status described below)
+       │    client info, deliberately distinct from the aggregate STATUS
+       │    shown on the main table)
        ├─ "+ New X" → same CreateXForm, passed `lockedClient={client}` (renders
        │    a read-only client display instead of the Combobox; no GET /clients call)
        ├─ {Feature}Filters with `showClientFilter={false}` (hides the now-redundant
@@ -62,8 +71,12 @@ These three features' main pages were reorganized from "one row per resource" to
        └─ the existing {Feature}Table + DataTablePagination + every existing
             dialog (status/revoke/regenerate/delete/details), unchanged —
             queried via the real `GET /{feature}?clientId=<id>&...`, paginated
-            server-side, exactly like the old page did but scoped to one client
+            server-side, exactly like before
 ```
+
+**`ClientRef` type** (`src/features/clients/clients.types.ts`): `Pick<Client, 'id' | 'name' | 'code' | 'active'>` — the minimal client shape embedded in every per-resource record (`ApiKeyClientRef` etc. are now type aliases of it) and in every `clients-summary` item's `client` field. The three `*ClientDrawer` components' `client` prop is typed `ClientRef | null`, not the full `Client` — the drawer never needs `description`/`contactName`/`contactEmail`.
+
+**Summary invalidation (React Query):** every mutation hook for all three features (create/update/status/revoke/regenerate/delete) invalidates BOTH its own resource query key (`{feature}Keys.lists()`/`detail(id)`, unchanged) AND the feature's `{feature}ClientsSummaryKeys.lists()` on success (and on delete's 404 `onError`, since that also means the record is gone). This is what makes create-first-resource/delete-last-resource/activate/deactivate on the drawer automatically reflect on the main clients-summary view via a refetch — no `window.location.reload()` anywhere. `useUpdateApiKey` also invalidates the summary, since editing `expiresAt` can flip whether a key currently counts as "active" in the aggregate.
 
 **Component split to avoid conditional-hooks violations:** each `*ClientDrawer` is `<Sheet>{client && <XClientDrawerContent client={client} />}</Sheet>` — the actual data-fetching/state-holding component only mounts once a client is selected (never called with a possibly-null client), and gets `key={client.id}` so switching clients cleanly remounts (fresh filters/dialog state) instead of reusing stale state across clients.
 
@@ -71,7 +84,34 @@ These three features' main pages were reorganized from "one row per resource" to
 - `CreateApiKeyForm`/`CreateAllowedIpForm`/`CreateGatewayRouteForm` gained an optional `lockedClient?: {id, name, code}` prop.
 - `ApiKeyFilters`/`AllowedIpFilters`/`GatewayRouteFilters` gained an optional `showClientFilter?: boolean` (default `true`).
 
-**Current limitation, blocked on backend — do not "fix" this client-side:** the main table currently shows **every** client (even ones with zero resources for that feature) and its Status column is `client.active`, not a resource-derived status. Product wants both changed (hide empty clients, derive Status from the resources), but that requires backend-side aggregation to keep pagination exact at scale — see `.ai/BACKEND_CONTRACTS.md` → "Missing: per-client aggregate endpoints" for the full spec already written for this. Do not attempt a load-all, N+1, or approximate-pagination workaround for this — it was explicitly evaluated and rejected.
+See `.ai/BACKEND_CONTRACTS.md` → "Per-client aggregate endpoints ... CONFIRMED IMPLEMENTED" for the full real contract these pages consume.
+
+## Personalização / Branding global (2026-08-07)
+
+New "Personalização" section under Configurações (`/settings/personalization`, immediately below Certificados in `SETTINGS_NAV_ITEMS`), ADMIN only. Lets an admin edit the installation-wide (never per-user/per-client) `applicationName`, logo, favicon and main/brand image, all consumed from the real backend contract documented in `.ai/BACKEND_CONTRACTS.md` → "Branding" (that contract was undocumented before this task — confirmed live against `/docs-json` since the backend had already shipped it).
+
+```
+src/features/branding/
+  branding.types.ts       — Branding / ResolvedBranding / BrandingAssetKind
+  branding.constants.ts   — DEFAULT_BRANDING (single fallback source), per-asset accept lists + max sizes
+  branding.utils.ts       — resolveBranding(): the ONLY place fallback logic lives
+  branding.schemas.ts     — updateBrandingNameSchema (2–100 chars, trim, no `<`/`>`)
+  branding.service.ts     — GET /branding, PATCH /branding, POST/DELETE /branding/{logo,favicon,brand-image}
+  branding-errors.ts      — getBrandingUploadErrorMessage(): 400/413/415 → friendly copy, else falls back to api.errors.*
+  branding.hooks.ts       — useBranding() + useUpdateBrandingName/useUpload*/useDelete*
+```
+
+**`useBranding()` is the single source of branding data for the whole app** — Sidebar (`AppLogo`), Home/Login (`HeroImage`), the loading screen (`AuthLoadingScreen`, favicon + name), `document.title`/favicon (`BrandingEffects`) and the Personalização page itself all call this same hook, sharing one React Query cache entry (`brandingKeys.all = ['branding']`, no params) — no duplicate requests. It always returns a fully-resolved `branding` object (never `undefined`, even while loading or on error) via `resolveBranding()`, which is the **single** place fallback logic lives: every asset field falls back to `DEFAULT_BRANDING` independently, so customizing only the logo still shows the default favicon/brand image. `GET /branding` is a public, unauthenticated endpoint by design — it must work on `/login` and before the auth check resolves.
+
+**Asset URLs**: the backend returns `logoUrl`/`faviconUrl`/`brandImageUrl` as paths relative to its own origin (e.g. `/api/v1/branding/assets/logo?v=abc123`, already cache-busted by the backend) — `branding.service.ts` resolves them against `new URL(env.VITE_API_URL).origin` (never `VITE_PUBLIC_GATEWAY_URL`, which is the customer-facing gateway proxy and can be a different host in production). The resolver is idempotent (leaves an already-absolute `http(s)://` URL untouched) as a defensive guard.
+
+**Mutation invalidation**: there is only one real read endpoint (`GET /branding`, public — no separate "admin" branding query exists), so every mutation (name/upload/delete, 7 hooks total) invalidates that single query key on success. This is what makes the Sidebar/Home/Login/document title update immediately after saving in Personalização, with no `window.location.reload()`.
+
+**UI composition**: `BrandingNameForm` (name field, RHF + zod) and `BrandingAssetSection` (shared preview + upload + remove UI, reused 3× for logo/favicon/brand image — `variant="compact"` for logo/favicon, `"large"` for the brand image) are both presentational, driven entirely by props from `PersonalizationPage`. `BrandingAssetSection` does a client-side extension + file-size pre-check (mirroring the real backend per-asset limits in `branding.constants.ts` exactly) before ever calling `onUpload`, so an obviously-invalid file never round-trips to the network. Remove uses the existing `ConfirmationDialog` (not `DeleteConfirmationDialog` — resetting to default isn't a destructive data loss).
+
+**Permission model**: `branding.update` is ADMIN-only-no-exceptions (same pattern as `trustedCas.*` — see `role-permissions.ts`), gating the write controls within the page; the route itself is already gated by the existing `settings.read` (also ADMIN-only wildcard), so no new route-level permission was needed. There is deliberately no `branding.read` — `GET /branding` is public by design.
+
+**Backend bugs found and fixed live during this task** (all authorized by the user in real time, one at a time — see `.ai/CURRENT_TASK.md` for the full list): the global multipart content-type allowlist didn't include the 3 new branding upload routes (415 on every upload); `@fastify/multipart`'s file-size limit is only enforced during `file.toBuffer()`, not `request.file()`, so the try/catch needed to wrap both; Helmet's default `Cross-Origin-Resource-Policy: same-origin` blocked the public asset images from loading cross-origin via `<img src>` (fixed by setting `cross-origin-resource-policy: cross-origin` only on the 3 asset GET routes, not globally).
 
 ## File upload / multipart pattern — first introduced Etapa 15
 
