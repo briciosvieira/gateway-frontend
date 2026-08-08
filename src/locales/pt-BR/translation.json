@@ -99,7 +99,10 @@
       "disconnected": "Não foi possível conectar ao backend.",
       "retry": "Tentar novamente",
       "application": "Aplicação",
-      "uptime": "Tempo ativo"
+      "uptime": "Tempo ativo",
+      "compactChecking": "Verificando...",
+      "compactConnected": "Conectado",
+      "compactDisconnected": "Offline"
     }
   },
   "delete": {
@@ -296,7 +299,7 @@
     "title": "Usuários",
     "description": "Gerencie os usuários administrativos.",
     "new": "Novo usuário",
-    "search": "Pesquisar por nome, usuário ou e-mail",
+    "search": "Pesquisar",
     "empty": "Nenhum usuário encontrado.",
     "error": "Não foi possível carregar os usuários.",
     "filters": {
@@ -489,7 +492,7 @@
     "notAvailable": "—",
     "clientsView": {
       "action": "Ver API Keys",
-      "searchPlaceholder": "Buscar por nome ou identificador do cliente",
+      "searchPlaceholder": "Buscar por nome ou identificador",
       "allStatuses": "Todos",
       "sortBy": "Ordenar por",
       "sortOrder": "Direção",
@@ -613,7 +616,7 @@
     "notAvailable": "—",
     "clientsView": {
       "action": "Ver IPs",
-      "searchPlaceholder": "Buscar por nome ou identificador do cliente",
+      "searchPlaceholder": "Buscar por nome ou identificador",
       "allStatuses": "Todos",
       "sortBy": "Ordenar por",
       "sortOrder": "Direção",
@@ -718,7 +721,7 @@
     "notAvailable": "—",
     "clientsView": {
       "action": "Ver rotas",
-      "searchPlaceholder": "Buscar por nome ou identificador do cliente",
+      "searchPlaceholder": "Buscar por nome ou identificador",
       "allStatuses": "Todos",
       "sortBy": "Ordenar por",
       "sortOrder": "Direção",
@@ -924,7 +927,8 @@
     "nav": {
       "label": "Menu de configurações",
       "certificates": "Certificados",
-      "personalization": "Personalização"
+      "personalization": "Personalização",
+      "users": "Usuários"
     },
     "certificates": {
       "title": "Certificados",

@@ -99,7 +99,10 @@
       "disconnected": "Unable to connect to the backend.",
       "retry": "Try again",
       "application": "Application",
-      "uptime": "Uptime"
+      "uptime": "Uptime",
+      "compactChecking": "Checking...",
+      "compactConnected": "Connected",
+      "compactDisconnected": "Offline"
     }
   },
   "delete": {
@@ -296,7 +299,7 @@
     "title": "Users",
     "description": "Manage the administrative users.",
     "new": "New user",
-    "search": "Search by name, username or email",
+    "search": "Search by name",
     "empty": "No users found.",
     "error": "Unable to load users.",
     "filters": {
@@ -399,7 +402,7 @@
     "title": "Clients",
     "description": "Manage the clients.",
     "new": "New client",
-    "search": "Search by name, identifier, contact or email",
+    "search": "Search",
     "empty": "No clients found.",
     "error": "Unable to load clients.",
     "notAvailable": "—",
@@ -924,7 +927,8 @@
     "nav": {
       "label": "Settings menu",
       "certificates": "Certificates",
-      "personalization": "Personalization"
+      "personalization": "Personalization",
+      "users": "Users"
     },
     "certificates": {
       "title": "Certificates",

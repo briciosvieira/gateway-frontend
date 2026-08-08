@@ -14,6 +14,7 @@ const DEFAULT_PROPS = {
   formatsHint: 'Accepted formats: PNG, JPEG, WebP, SVG',
   variant: 'compact' as const,
   canEdit: true,
+  canRemove: true,
   onUpload: vi.fn(),
   onRemove: vi.fn().mockResolvedValue(undefined),
   isUploading: false,
@@ -47,10 +48,24 @@ describe('BrandingAssetSection', () => {
     expect(screen.getByRole('button', { name: 'Reset to default' })).toBeInTheDocument();
   });
 
-  it('hides every edit control when canEdit is false', () => {
-    render(<BrandingAssetSection {...DEFAULT_PROPS} isCustom canEdit={false} />);
+  it('hides every control when canEdit and canRemove are both false', () => {
+    render(<BrandingAssetSection {...DEFAULT_PROPS} isCustom canEdit={false} canRemove={false} />);
 
     expect(screen.queryByLabelText('Replace')).not.toBeInTheDocument();
+    expect(screen.queryByRole('button', { name: 'Reset to default' })).not.toBeInTheDocument();
+  });
+
+  it('shows the reset button but not the upload input when canEdit is false and canRemove is true', () => {
+    render(<BrandingAssetSection {...DEFAULT_PROPS} isCustom canEdit={false} canRemove />);
+
+    expect(screen.queryByLabelText('Replace')).not.toBeInTheDocument();
+    expect(screen.getByRole('button', { name: 'Reset to default' })).toBeInTheDocument();
+  });
+
+  it('shows the upload input but not the reset button when canEdit is true and canRemove is false (operator: can replace, cannot delete)', () => {
+    render(<BrandingAssetSection {...DEFAULT_PROPS} isCustom canEdit canRemove={false} />);
+
+    expect(screen.getByLabelText('Replace')).toBeInTheDocument();
     expect(screen.queryByRole('button', { name: 'Reset to default' })).not.toBeInTheDocument();
   });
 

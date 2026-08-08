@@ -105,6 +105,24 @@ describe('RequestLogsTable', () => {
     expect(onView).toHaveBeenCalledWith(rows[0]);
   });
 
+  it('keeps the Origin and HTTP Status badges from stretching full width in their column', () => {
+    render(
+      <RequestLogsTable
+        rows={rows}
+        sortBy="attemptedAt"
+        sortOrder="desc"
+        onToggleSort={vi.fn()}
+        onView={vi.fn()}
+      />,
+    );
+
+    const originBadge = screen.getByText('Public');
+    expect(originBadge.closest('div')?.className).toMatch(/items-start/);
+
+    const statusBadge = screen.getByText('200');
+    expect(statusBadge.closest('div')?.className).toMatch(/items-start/);
+  });
+
   it('defaults to showing most-recent-first with a descending sort indicator', () => {
     render(
       <RequestLogsTable

@@ -5,7 +5,7 @@
 - [x] Etapa 3 — Integração com backend
 - [x] Etapa 4 — Autenticação
 - [x] Etapa 5 — Dashboard
-- [x] Etapa 6 — Usuários
+- [x] Etapa 6 — Usuários (2026-08-08: rota movida de `/users` para `/settings/users`, dentro de Configurações — `/users` antigo agora redireciona; acessível por ADMIN e OPERATOR, sem mudança de regra de negócio)
 - [x] Etapa 7 — Clientes
 - [x] Etapa 8 — API Keys (reorganização "visão por cliente" concluída em 2026-08-07 consumindo o endpoint agregado real `GET /api-keys/clients-summary` — ver `.ai/BACKEND_CONTRACTS.md` e `.ai/FRONTEND_ARCHITECTURE.md`)
 - [x] Etapa 9 — Allowed IPs (idem, `GET /allowed-ips/clients-summary`)
@@ -14,7 +14,9 @@
 - [x] Etapa 12 — Audit Logs
 - [x] Etapa 13 — Request Logs (alinhado 2026-08-07 ao contrato corrigido de `attemptedAt` NOT NULL — ver `.ai/BACKEND_CONTRACTS.md`)
 - [ ] Etapa 14 — Meu Perfil
-- [x] Etapa 15 — Configurações (Certificados internos / Trusted CAs — ver `.ai/BACKEND_CONTRACTS.md`; ajustes visuais concluídos em 2026-08-07; seção Personalização/branding global adicionada em 2026-08-07 — ver `.ai/FRONTEND_ARCHITECTURE.md`)
+- [x] Etapa 15 — Configurações (Certificados internos / Trusted CAs — ver `.ai/BACKEND_CONTRACTS.md`; ajustes visuais concluídos em 2026-08-07; seção Personalização/branding global adicionada em 2026-08-07; 2026-08-08: acesso a Configurações liberado para OPERATOR — pode tudo exceto excluir —, Certificados permanece ADMIN-only, Usuários passou a viver aqui — ver `.ai/FRONTEND_ARCHITECTURE.md`)
 - [ ] Etapa 16 — Revisão final de componentes
 - [ ] Etapa 17 — Testes finais
 - [ ] Etapa 18 — Documentação final
+- [x] Ajustes visuais/layout (2026-08-08) — Sidebar principal, Home, Backend Status, badges de status, footer da Sidebar e scroll de Configurações; ver `.ai/CURRENT_TASK.md`
+- [x] Ajustes visuais pontuais, 2ª rodada (2026-08-08) — Backend Status fora do card de Monitoring, item Configurações 100% visível na Sidebar (bug de medição do footer corrigido), tooltips da Sidebar sem risco de clipping, badges Method/Origin/HTTP Status compactos em Route Headers e Request Logs; ver `.ai/CURRENT_TASK.md`

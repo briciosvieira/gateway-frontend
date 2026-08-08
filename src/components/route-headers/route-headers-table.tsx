@@ -88,7 +88,7 @@ export function RouteHeadersTable({
               <tr key={row.id} className="hover:bg-surface/60">
                 <td className="px-4 py-2 font-medium text-foreground">{row.name}</td>
                 <td className="px-4 py-2">
-                  <div className="flex min-w-52 flex-col gap-1">
+                  <div className="flex min-w-52 flex-col items-start gap-1">
                     <span>{routeContext?.name ?? t('routeHeaders.notAvailable')}</span>
                     {routeContext && <MethodBadge method={routeContext.method} />}
                   </div>

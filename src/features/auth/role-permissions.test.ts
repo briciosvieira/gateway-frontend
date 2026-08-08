@@ -182,10 +182,31 @@ describe('roleHasPermission', () => {
     expect(roleHasPermission('VIEWER', 'requestLogs.read')).toBe(false);
   });
 
-  it('grants branding.update only to ADMIN, same ADMIN-only-no-exceptions pattern as trustedCas.*', () => {
+  it('grants settings.read to ADMIN and OPERATOR only — the outer Configurações entry gate', () => {
+    expect(roleHasPermission('ADMIN', 'settings.read')).toBe(true);
+    expect(roleHasPermission('OPERATOR', 'settings.read')).toBe(true);
+    expect(roleHasPermission('VIEWER', 'settings.read')).toBe(false);
+    expect(roleHasPermission('AUDITOR', 'settings.read')).toBe(false);
+  });
+
+  it('grants trustedCas.read only to ADMIN — Certificados stays ADMIN-only with no exceptions', () => {
+    expect(roleHasPermission('ADMIN', 'trustedCas.read')).toBe(true);
+    expect(roleHasPermission('OPERATOR', 'trustedCas.read')).toBe(false);
+    expect(roleHasPermission('VIEWER', 'trustedCas.read')).toBe(false);
+    expect(roleHasPermission('AUDITOR', 'trustedCas.read')).toBe(false);
+  });
+
+  it('grants branding.update to ADMIN and OPERATOR (mirrors BrandingAdminController name/upload @Roles(ADMIN, OPERATOR))', () => {
     expect(roleHasPermission('ADMIN', 'branding.update')).toBe(true);
-    expect(roleHasPermission('OPERATOR', 'branding.update')).toBe(false);
+    expect(roleHasPermission('OPERATOR', 'branding.update')).toBe(true);
     expect(roleHasPermission('VIEWER', 'branding.update')).toBe(false);
     expect(roleHasPermission('AUDITOR', 'branding.update')).toBe(false);
+  });
+
+  it('grants branding.delete only to ADMIN — operator can replace branding assets but not reset them to default', () => {
+    expect(roleHasPermission('ADMIN', 'branding.delete')).toBe(true);
+    expect(roleHasPermission('OPERATOR', 'branding.delete')).toBe(false);
+    expect(roleHasPermission('VIEWER', 'branding.delete')).toBe(false);
+    expect(roleHasPermission('AUDITOR', 'branding.delete')).toBe(false);
   });
 });

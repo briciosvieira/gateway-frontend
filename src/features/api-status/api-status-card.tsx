@@ -3,17 +3,10 @@ import { useTranslation } from 'react-i18next';
 
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { formatUptime } from '@/features/api-status/api-status.utils';
 import { useApiHealth } from '@/features/api-status/use-api-health';
 import { getApiErrorMessage } from '@/lib/api/api-response';
 import { cn } from '@/lib/utils';
-
-function formatUptime(totalSeconds: number): string {
-  const totalMinutes = Math.floor(totalSeconds / 60);
-  const hours = Math.floor(totalMinutes / 60);
-  const minutes = totalMinutes % 60;
-
-  return hours > 0 ? `${hours}h ${minutes}m` : `${minutes}m`;
-}
 
 export function ApiStatusCard() {
   const { t } = useTranslation();

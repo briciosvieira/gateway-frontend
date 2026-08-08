@@ -78,6 +78,24 @@ describe('ClientResourceListTable', () => {
     expect(screen.getByText('2 total')).toBeInTheDocument();
   });
 
+  it('keeps the status badge from stretching full width — its wrapper opts out of the default flex-column stretch', () => {
+    render(
+      <ClientResourceListTable
+        rows={ROWS}
+        getClient={(row) => row.client}
+        isActive={(row) => row.active > 0}
+        actionLabel="View API Keys"
+        caption="API Keys"
+        onOpenClient={vi.fn()}
+      />,
+    );
+
+    const badge = screen.getAllByText('Active')[0];
+    const wrapper = badge.closest('div');
+    expect(wrapper?.className).toMatch(/items-start/);
+    expect(wrapper?.className).not.toMatch(/w-full/);
+  });
+
   it('opens the client both via the row click and via the explicit action button', () => {
     const onOpenClient = vi.fn();
     render(

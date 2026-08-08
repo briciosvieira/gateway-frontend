@@ -24,12 +24,12 @@ import { NAV_ITEMS } from '@/routes/nav-items';
 import { PermissionRoute } from '@/routes/permission-route';
 import { ProtectedRoute } from '@/routes/protected-route';
 import { PublicRoute } from '@/routes/public-route';
+import { SettingsIndexRedirect } from '@/routes/settings-index-redirect';
 
 const placeholderRoutes = NAV_ITEMS.filter(
   (item) =>
     item.path !== '/' &&
     item.path !== '/dashboard' &&
-    item.path !== '/users' &&
     item.path !== '/clients' &&
     item.path !== '/api-keys' &&
     item.path !== '/allowed-ips' &&
@@ -60,10 +60,9 @@ export const appRouter = createBrowserRouter([
         children: [
           { path: '/', element: <HomePage /> },
           { path: '/dashboard', element: <DashboardPage /> },
-          {
-            element: <PermissionRoute permission="users.read" />,
-            children: [{ path: '/users', element: <UsersPage /> }],
-          },
+          // Usuários moved under Configurações (/settings/users) — this
+          // keeps old bookmarks/links working instead of a dead 404.
+          { path: '/users', element: <Navigate to="/settings/users" replace /> },
           { path: '/clients', element: <ClientsPage /> },
           { path: '/api-keys', element: <ApiKeysPage /> },
           { path: '/allowed-ips', element: <AllowedIpsPage /> },
@@ -81,15 +80,25 @@ export const appRouter = createBrowserRouter([
             children: [{ path: '/request-logs', element: <RequestLogsPage /> }],
           },
           {
+            // Entry into Configurações at all — ADMIN + OPERATOR. Each
+            // subsection below applies its own, stricter inner gate; this
+            // outer one does not imply access to every subsection.
             element: <PermissionRoute permission="settings.read" />,
             children: [
               {
                 path: '/settings',
                 element: <SettingsLayout />,
                 children: [
-                  { index: true, element: <Navigate to="/settings/certificates" replace /> },
-                  { path: 'certificates', element: <CertificatesPage /> },
+                  { index: true, element: <SettingsIndexRedirect /> },
+                  {
+                    element: <PermissionRoute permission="trustedCas.read" />,
+                    children: [{ path: 'certificates', element: <CertificatesPage /> }],
+                  },
                   { path: 'personalization', element: <PersonalizationPage /> },
+                  {
+                    element: <PermissionRoute permission="users.read" />,
+                    children: [{ path: 'users', element: <UsersPage /> }],
+                  },
                 ],
               },
             ],

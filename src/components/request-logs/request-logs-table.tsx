@@ -118,7 +118,7 @@ export function RequestLogsTable({
                 {formatRequestLogDateTime(row.attemptedAt, i18n.language)}
               </td>
               <td className="px-4 py-2">
-                <div className="flex min-w-40 flex-col gap-1">
+                <div className="flex min-w-40 flex-col items-start gap-1">
                   {row.requestOrigin ? (
                     <RequestOriginBadge origin={row.requestOrigin} />
                   ) : (
@@ -164,7 +164,7 @@ export function RequestLogsTable({
                 </div>
               </td>
               <td className="px-4 py-2">
-                <div className="flex min-w-24 flex-col gap-1">
+                <div className="flex min-w-24 flex-col items-start gap-1">
                   <HttpStatusBadge statusCode={row.statusCode} />
                   {row.errorCode && (
                     <span className="text-xs text-muted-foreground break-all">{row.errorCode}</span>

@@ -70,7 +70,7 @@ export function ClientResourceListTable<T>({
                 <td className="px-4 py-2 font-medium text-foreground">{client.name}</td>
                 <td className="px-4 py-2 font-mono text-xs text-muted-foreground">{client.code}</td>
                 <td className="px-4 py-2">
-                  <div className="flex flex-col gap-1">
+                  <div className="flex flex-col items-start gap-1">
                     <StatusBadge active={isActive(row)} />
                     {renderCounts && (
                       <span className="text-xs text-muted-foreground">{renderCounts(row)}</span>

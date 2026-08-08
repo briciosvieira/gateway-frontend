@@ -1,12 +1,9 @@
-import { PanelLeftClose, PanelLeftOpen } from 'lucide-react';
 import { useLayoutEffect, useRef, useState } from 'react';
-import { useTranslation } from 'react-i18next';
 
 import { AppLogo } from '@/components/branding/app-logo';
 import { SidebarFooter } from '@/components/layout/sidebar-footer';
 import { SidebarItem } from '@/components/layout/sidebar-item';
 import { SidebarUser } from '@/components/layout/sidebar-user';
-import { Button } from '@/components/ui/button';
 import { usePermissions } from '@/features/auth/use-permissions';
 import { useSidebar } from '@/hooks/use-sidebar';
 import { cn } from '@/lib/utils';
@@ -14,12 +11,11 @@ import { NAV_ITEMS } from '@/routes/nav-items';
 
 // Extra breathing room below the last nav item, on top of the footer's own
 // measured height, so it doesn't end up flush against the footer's border.
-const NAV_BOTTOM_GAP_PX = 12;
+const NAV_BOTTOM_GAP_PX = 16;
 
 export function Sidebar() {
   const { isCollapsed, toggleSidebar } = useSidebar();
   const { hasPermission } = usePermissions();
-  const { t } = useTranslation();
 
   // The footer's height changes with `isCollapsed` (SidebarFooter stacks its
   // controls vertically when collapsed) and with content/translation length,
@@ -32,8 +28,12 @@ export function Sidebar() {
     const footerElement = footerRef.current;
     if (!footerElement) return;
 
-    const observer = new ResizeObserver(([entry]) => {
-      setFooterHeight(entry.contentRect.height);
+    // `entry.contentRect` is the content-box only (excludes the footer's own
+    // padding/border), which under-measures its real rendered height and
+    // left the last nav item still peeking out from behind it — read
+    // `offsetHeight` (border-box) from the element itself instead.
+    const observer = new ResizeObserver(() => {
+      setFooterHeight(footerElement.offsetHeight);
     });
     observer.observe(footerElement);
 
@@ -74,18 +74,7 @@ export function Sidebar() {
         >
           <SidebarUser collapsed={isCollapsed} />
 
-          <Button
-            type="button"
-            variant="ghost"
-            size="icon"
-            aria-label={t(isCollapsed ? 'sidebar.expand' : 'sidebar.collapse')}
-            onClick={toggleSidebar}
-            className={cn(isCollapsed ? 'self-center' : 'self-end')}
-          >
-            {isCollapsed ? <PanelLeftOpen /> : <PanelLeftClose />}
-          </Button>
-
-          <SidebarFooter collapsed={isCollapsed} />
+          <SidebarFooter collapsed={isCollapsed} onToggleSidebar={toggleSidebar} />
         </footer>
       </div>
     </aside>

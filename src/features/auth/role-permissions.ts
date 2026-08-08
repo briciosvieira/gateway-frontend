@@ -75,25 +75,40 @@ import type { RoleCode } from '@/features/auth/auth.types';
  * /request-logs/by-request-id/:requestId`. VIEWER is intentionally
  * excluded and gets a 403 on the whole module.
  *
- * `settings.read` / `trustedCas.*` — the Configurações area (Trusted CAs)
- * mirrors `TrustedCasController`'s class-level `@Roles(ADMIN)` — **ADMIN
- * only, no exceptions**: unlike every other module above, OPERATOR/VIEWER/
- * AUDITOR get a 403 on every single trusted-cas endpoint including `GET`.
- * `settings.read` gates the whole `/settings/*` area (nav item + route);
- * `trustedCas.create`/`trustedCas.status`/`trustedCas.delete` gate the
- * per-action UI within it. All are granted to ADMIN only via the `'*'`
- * wildcard — deliberately absent from every other role's array.
+ * `settings.read` — gates entry into the whole `/settings/*` area (nav item
+ * + outer route wrapper only). As of 2026-08-07, product decided
+ * Configurações is no longer ADMIN-only-no-exceptions as a whole: OPERATOR
+ * needs it too, since Usuários moved here (out of the main Sidebar) and
+ * Personalização is now OPERATOR-editable. Each subsection then applies its
+ * own, stricter inner gate — `settings.read` alone does NOT imply access to
+ * every subsection.
  *
- * `branding.update` — the Personalização page (`/settings/personalization`,
- * added alongside Certificados) mirrors `BrandingAdminController`'s
- * `@ApiBearerAuth` write endpoints (name/logo/favicon/brand-image
- * upload+remove) — **ADMIN only, no exceptions**, same pattern as
- * `trustedCas.*` above. The page itself is already gated by `settings.read`
- * (ADMIN-only wildcard), so `branding.update` only needs to gate the
- * write-action UI (form submit, upload/remove buttons) within it; there is
- * no `branding.read` — the underlying `GET /branding` is a public,
- * unauthenticated endpoint by design (Sidebar/Home/Login need it before
- * login), so read access is never permission-gated on the frontend.
+ * `trustedCas.read` / `trustedCas.*` — Certificados stays **ADMIN only, no
+ * exceptions**, mirroring `TrustedCasController`'s class-level
+ * `@Roles(ADMIN)` — OPERATOR/VIEWER/AUDITOR get a 403 on every single
+ * trusted-cas endpoint including `GET`. `trustedCas.read` gates the
+ * `/settings/certificates` route and its nav item specifically (on top of
+ * the outer `settings.read`); `trustedCas.create`/`trustedCas.status`/
+ * `trustedCas.delete` gate the per-action UI within it. All are ADMIN only
+ * via the `'*'` wildcard.
+ *
+ * `branding.update` / `branding.delete` — the Personalização page
+ * (`/settings/personalization`) needs no extra route-level permission
+ * beyond `settings.read` (ADMIN+OPERATOR both land here). Within the page,
+ * write actions split in two, mirroring `BrandingAdminController`'s
+ * per-method `@Roles` (confirmed against backend source, 2026-08-07):
+ * `branding.update` (name PATCH, logo/favicon/brand-image POST upload) is
+ * ADMIN+OPERATOR; `branding.delete` (the three asset DELETE/"reset to
+ * default" actions) is **ADMIN only** — product's rule is "operator can do
+ * anything in Configurações except delete". There is no `branding.read` —
+ * `GET /branding` is a public, unauthenticated endpoint by design (Sidebar/
+ * Home/Login need it before login), so read access is never permission-
+ * gated on the frontend.
+ *
+ * `users.*` moving under `/settings/users` (2026-08-07) needed no
+ * permission changes — `users.read`/`create`/`update`/`status`/etc. were
+ * already ADMIN+OPERATOR and `users.delete` was already ADMIN only, which
+ * already matches the "no delete for operator" rule exactly.
  */
 export const ROLE_PERMISSIONS: Record<RoleCode, string[]> = {
   ADMIN: ['*'],
@@ -130,6 +145,8 @@ export const ROLE_PERMISSIONS: Record<RoleCode, string[]> = {
     'users.role',
     'users.resetPassword',
     'users.passwordRequirement',
+    'settings.read',
+    'branding.update',
   ],
   VIEWER: [
     'dashboard.read',

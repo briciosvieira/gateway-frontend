@@ -1,6 +1,7 @@
 import { useTranslation } from 'react-i18next';
 import { NavLink } from 'react-router-dom';
 
+import { usePermissions } from '@/features/auth/use-permissions';
 import { cn } from '@/lib/utils';
 import { SETTINGS_NAV_ITEMS } from '@/routes/settings-nav-items';
 
@@ -10,16 +11,24 @@ import { SETTINGS_NAV_ITEMS } from '@/routes/settings-nav-items';
  * scrollable strip on narrow screens so it never squeezes the content into
  * a tiny column. Never independently scrollable vertically — Main Content
  * remains the app's sole vertical scroll container (see `.ai/UI_RULES.md`).
+ * Filters by permission the same way the main Sidebar filters `NAV_ITEMS`
+ * — Certificados requires `trustedCas.read` (ADMIN only), so an OPERATOR
+ * inside Configurações never sees that entry.
  */
 export function SettingsSidebar() {
   const { t } = useTranslation();
+  const { hasPermission } = usePermissions();
+
+  const visibleItems = SETTINGS_NAV_ITEMS.filter(
+    (item) => !item.permission || hasPermission(item.permission),
+  );
 
   return (
     <nav
       aria-label={t('settings.nav.label')}
       className="flex shrink-0 gap-1 overflow-x-auto rounded-lg border border-border bg-card p-2 md:w-56 md:flex-col md:overflow-visible md:p-3"
     >
-      {SETTINGS_NAV_ITEMS.map((item) => {
+      {visibleItems.map((item) => {
         const Icon = item.icon;
 
         return (

@@ -32,16 +32,19 @@ interface FeedbackState {
 const FEEDBACK_TIMEOUT_MS = 4000;
 
 /**
- * Global, installation-wide branding — never per-user/per-client. Gated by
- * the same `settings.read` (ADMIN-only) route guard as Certificados;
- * `branding.update` additionally gates the write actions here. `GET
- * /branding` itself (via `useBranding`) is a public endpoint reused
+ * Global, installation-wide branding — never per-user/per-client. Reachable
+ * by ADMIN + OPERATOR (unlike Certificados, which stays ADMIN-only). Within
+ * the page, write actions split in two: `branding.update` (name, upload —
+ * ADMIN+OPERATOR) and `branding.delete` (reset-to-default — ADMIN only),
+ * mirroring the backend's per-method `@Roles` on `BrandingAdminController`.
+ * `GET /branding` itself (via `useBranding`) is a public endpoint reused
  * unchanged from Sidebar/Home/Login — this page only adds mutations.
  */
 export function PersonalizationPage() {
   const { t } = useTranslation();
   const { hasPermission } = useAuth();
   const canEdit = hasPermission('branding.update');
+  const canRemove = hasPermission('branding.delete');
 
   const { branding } = useBranding();
   const [feedback, setFeedback] = useState<FeedbackState | null>(null);
@@ -113,6 +116,7 @@ export function PersonalizationPage() {
         formatsHint={t('settings.personalization.logo.formats')}
         variant="compact"
         canEdit={canEdit}
+        canRemove={canRemove}
         onUpload={(file) =>
           uploadLogoMutation.mutate(file, {
             onSuccess: () =>
@@ -155,6 +159,7 @@ export function PersonalizationPage() {
         formatsHint={t('settings.personalization.favicon.formats')}
         variant="compact"
         canEdit={canEdit}
+        canRemove={canRemove}
         onUpload={(file) =>
           uploadFaviconMutation.mutate(file, {
             onSuccess: () =>
@@ -197,6 +202,7 @@ export function PersonalizationPage() {
         formatsHint={t('settings.personalization.brandImage.formats')}
         variant="large"
         canEdit={canEdit}
+        canRemove={canRemove}
         onUpload={(file) =>
           uploadImageMutation.mutate(file, {
             onSuccess: () =>

@@ -34,12 +34,18 @@ function TooltipContent({
   ...props
 }: ComponentProps<typeof TooltipPrimitive.Content>) {
   return (
+    // Portal already renders into `document.body`, outside the Sidebar/Main
+    // Content DOM (and their `overflow-hidden`), and Radix positions content
+    // with `position: fixed`, so it's never clipped by an ancestor's
+    // scroll/overflow region. `z-60` (above Dialog/Sheet/DropdownMenu's
+    // `z-50`) just guarantees a tooltip never renders underneath one of
+    // those when both happen to be open at once.
     <TooltipPrimitive.Portal>
       <TooltipPrimitive.Content
         data-slot="tooltip-content"
         sideOffset={sideOffset}
         className={cn(
-          'z-50 overflow-hidden rounded-md border border-border bg-popover px-3 py-1.5 text-xs text-popover-foreground shadow-md',
+          'z-60 overflow-hidden rounded-md border border-border bg-popover px-3 py-1.5 text-xs text-popover-foreground shadow-md',
           className,
         )}
         {...props}

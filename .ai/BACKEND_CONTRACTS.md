@@ -823,17 +823,18 @@ Not documented here before this task — the backend had already shipped it, so 
 **Paths:**
 ```
 GET    /branding                     — public, no auth (BrandingPublicController)
-PATCH  /branding                     — ADMIN (bearer), updates applicationName
-POST   /branding/logo                — ADMIN, multipart/form-data, field "file"
-DELETE /branding/logo                — ADMIN
-POST   /branding/favicon             — ADMIN, multipart/form-data, field "file"
-DELETE /branding/favicon             — ADMIN
-POST   /branding/brand-image         — ADMIN, multipart/form-data, field "file"
-DELETE /branding/brand-image         — ADMIN
+PATCH  /branding                     — ADMIN + OPERATOR (bearer), updates applicationName
+POST   /branding/logo                — ADMIN + OPERATOR, multipart/form-data, field "file"
+DELETE /branding/logo                — ADMIN only
+POST   /branding/favicon             — ADMIN + OPERATOR, multipart/form-data, field "file"
+DELETE /branding/favicon             — ADMIN only
+POST   /branding/brand-image         — ADMIN + OPERATOR, multipart/form-data, field "file"
+DELETE /branding/brand-image         — ADMIN only
 GET    /branding/assets/logo         — public, binary (image/png|jpeg|webp|svg+xml), 404 if unset
 GET    /branding/assets/favicon      — public, binary (+ image/x-icon, image/vnd.microsoft.icon), 404 if unset
 GET    /branding/assets/brand-image  — public, binary, 404 if unset
 ```
+**2026-08-08 update**: `BrandingAdminController`'s `@Roles` moved from one class-level `ADMIN`-only decorator to per-method decorators — name update and all 3 uploads now allow OPERATOR too (product decision: OPERATOR can do everything in Configurações except delete), while all 3 asset DELETE endpoints stayed ADMIN-only. Confirmed via a rewritten `branding.integration-spec.ts` (real Postgres + real `RolesGuard`, not mocked) — see `.ai/CURRENT_TASK.md` for the full before/after. Frontend mirrors this as `branding.update` (ADMIN+OPERATOR) vs `branding.delete` (ADMIN only) in `role-permissions.ts`.
 Every JSON-returning endpoint above (`GET /branding`, `PATCH /branding`, and every asset `POST`/`DELETE`) returns the exact same shape wrapped in the standard envelope:
 ```ts
 { applicationName: string, logoUrl: string | null, faviconUrl: string | null, brandImageUrl: string | null, updatedAt: string | null }

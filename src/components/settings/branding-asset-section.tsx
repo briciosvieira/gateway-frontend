@@ -23,7 +23,10 @@ interface BrandingAssetSectionProps {
   formatsHint: string;
   /** `compact` for logo/favicon (small square preview), `large` for the brand image (wider, still bounded). */
   variant: 'compact' | 'large';
+  /** Gates the upload input (name update / new asset) — `branding.update`, ADMIN+OPERATOR. */
   canEdit: boolean;
+  /** Gates the "reset to default" button and its confirm dialog — `branding.delete`, ADMIN only. Independent from `canEdit`: an operator can replace an asset but not remove it back to default. */
+  canRemove: boolean;
   onUpload: (file: File) => void;
   onRemove: () => Promise<void>;
   isUploading: boolean;
@@ -50,6 +53,7 @@ export function BrandingAssetSection({
   formatsHint,
   variant,
   canEdit,
+  canRemove,
   onUpload,
   onRemove,
   isUploading,
@@ -119,19 +123,21 @@ export function BrandingAssetSection({
             {isCustom ? formatsHint : t('settings.personalization.usingDefault')}
           </p>
 
-          {canEdit && (
+          {(canEdit || canRemove) && (
             <div className="flex flex-wrap items-center gap-2">
-              <Input
-                key={fileInputKey}
-                type="file"
-                accept={accept}
-                onChange={handleFileChange}
-                disabled={isUploading || isRemoving}
-                aria-label={t('settings.personalization.actions.replace')}
-                className="max-w-64 file:mr-3 file:h-7 file:rounded-md file:border-0 file:bg-secondary file:px-3 file:text-sm file:font-medium file:text-secondary-foreground"
-              />
+              {canEdit && (
+                <Input
+                  key={fileInputKey}
+                  type="file"
+                  accept={accept}
+                  onChange={handleFileChange}
+                  disabled={isUploading || isRemoving}
+                  aria-label={t('settings.personalization.actions.replace')}
+                  className="max-w-64 file:mr-3 file:h-7 file:rounded-md file:border-0 file:bg-secondary file:px-3 file:text-sm file:font-medium file:text-secondary-foreground"
+                />
+              )}
 
-              {isCustom && (
+              {isCustom && canRemove && (
                 <Button
                   type="button"
                   variant="outline"

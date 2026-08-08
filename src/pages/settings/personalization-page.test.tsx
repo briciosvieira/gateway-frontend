@@ -31,10 +31,10 @@ function brandingState(overrides: Partial<Record<string, unknown>> = {}) {
   };
 }
 
-let hasPermissionMock = () => true;
+let hasPermissionMock = (_permission: string) => true;
 vi.mock('@/features/auth/use-auth', () => ({
   useAuth: () => ({
-    hasPermission: (permission: string) => hasPermissionMock() && Boolean(permission),
+    hasPermission: (permission: string) => hasPermissionMock(permission),
   }),
 }));
 
@@ -147,7 +147,7 @@ describe('PersonalizationPage', () => {
     expect(await screen.findByText('Favicon removed.')).toBeInTheDocument();
   });
 
-  it('hides every write control for a non-ADMIN user (branding.update denied)', async () => {
+  it('hides every write control for a user with no branding permissions (VIEWER/AUDITOR)', async () => {
     server.use(http.get(`${BASE}/branding`, () => HttpResponse.json(successBody(brandingState()))));
 
     hasPermissionMock = () => false;
@@ -157,5 +157,23 @@ describe('PersonalizationPage', () => {
     expect(screen.getByLabelText('Application name')).toBeDisabled();
     expect(screen.queryByRole('button', { name: 'Save changes' })).not.toBeInTheDocument();
     expect(screen.queryByLabelText('Replace')).not.toBeInTheDocument();
+  });
+
+  it('lets an OPERATOR-like user (branding.update granted, branding.delete denied) upload but not reset to default', async () => {
+    server.use(
+      http.get(`${BASE}/branding`, () =>
+        HttpResponse.json(
+          successBody(brandingState({ logoUrl: `${BASE}/branding/assets/logo?v=1` })),
+        ),
+      ),
+    );
+
+    hasPermissionMock = (permission) => permission === 'branding.update';
+    renderPage();
+    await screen.findByLabelText('Application name');
+
+    expect(screen.getByLabelText('Application name')).not.toBeDisabled();
+    expect(screen.getAllByLabelText('Replace').length).toBeGreaterThan(0);
+    expect(screen.queryByRole('button', { name: 'Reset to default' })).not.toBeInTheDocument();
   });
 });

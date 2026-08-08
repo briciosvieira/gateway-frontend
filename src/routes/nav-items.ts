@@ -9,15 +9,14 @@ import {
   Route as RouteIcon,
   Settings,
   ShieldCheck,
-  Users,
 } from 'lucide-react';
 
 import type { NavItem } from '@/types/navigation';
 
+/** Usuários lives under Configurações now (`/settings/users`) — see `SETTINGS_NAV_ITEMS` — not in the main Sidebar. */
 export const NAV_ITEMS: NavItem[] = [
   { key: 'home', labelKey: 'nav.home', path: '/', icon: House },
   { key: 'dashboard', labelKey: 'nav.dashboard', path: '/dashboard', icon: LayoutDashboard },
-  { key: 'users', labelKey: 'nav.users', path: '/users', icon: Users, permission: 'users.read' },
   { key: 'clients', labelKey: 'nav.clients', path: '/clients', icon: Building2 },
   { key: 'apiKeys', labelKey: 'nav.apiKeys', path: '/api-keys', icon: KeyRound },
   { key: 'allowedIps', labelKey: 'nav.allowedIps', path: '/allowed-ips', icon: ShieldCheck },

@@ -1,9 +1,13 @@
 import { render, screen } from '@testing-library/react';
 import { MemoryRouter, Navigate, Route, Routes } from 'react-router-dom';
-import { beforeAll, describe, expect, it } from 'vitest';
+import { beforeAll, describe, expect, it, vi } from 'vitest';
 
 import { SettingsLayout } from '@/layouts/settings-layout';
 import i18next from '@/lib/i18n';
+
+vi.mock('@/features/auth/use-auth', () => ({
+  useAuth: () => ({ hasPermission: () => true }),
+}));
 
 function renderAt(path: string) {
   return render(
@@ -44,9 +48,21 @@ describe('SettingsLayout', () => {
     expect(link).toHaveAttribute('rel', 'noopener noreferrer');
   });
 
-  it('never adds its own vertical scroll container around the sidebar+content region', () => {
+  it('never uses h-screen/h-dvh — its fixed height comes from filling the parent <main>, not the viewport', () => {
     const { container } = renderAt('/settings/certificates');
-    expect(container.innerHTML).not.toMatch(/overflow-y-auto/);
     expect(container.innerHTML).not.toMatch(/h-screen|h-dvh/);
+  });
+
+  it('scopes the vertical scroll container to only the inner content pane — the title, divider and secondary sidebar stay outside it', () => {
+    renderAt('/settings/certificates');
+
+    const content = screen.getByText('Certificates page content');
+    expect(content.closest('.overflow-y-auto')).not.toBeNull();
+
+    const heading = screen.getByRole('heading', { name: 'Settings' });
+    expect(heading.closest('.overflow-y-auto')).toBeNull();
+
+    const certificatesLink = screen.getByRole('link', { name: 'Certificates' });
+    expect(certificatesLink.closest('.overflow-y-auto')).toBeNull();
   });
 });

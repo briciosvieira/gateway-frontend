@@ -53,4 +53,22 @@ describe('RouteHeadersTable', () => {
 
     expect(screen.queryByText('Delete')).not.toBeInTheDocument();
   });
+
+  it('keeps the method badge from stretching full width under the route name', () => {
+    render(
+      <RouteHeadersTable
+        rows={[ROW]}
+        routeContexts={ROUTE_CONTEXT}
+        permissions={{ canUpdate: true, canChangeStatus: true, canDelete: true }}
+        onView={vi.fn()}
+        onEdit={vi.fn()}
+        onToggleStatus={vi.fn()}
+        onDelete={vi.fn()}
+      />,
+    );
+
+    const badge = screen.getByText('POST');
+    const wrapper = badge.closest('div');
+    expect(wrapper?.className).toMatch(/items-start/);
+  });
 });

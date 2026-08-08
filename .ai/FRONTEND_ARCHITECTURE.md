@@ -2,29 +2,33 @@
 
 This file was empty before Etapa 15 (Configurações). It is not a full retroactive audit of every prior module — only architecture that a future etapa needs to know about to extend "Configurações" or add a similarly structured settings-like area.
 
-## Configurações (Settings) area — added Etapa 15 (2026-08-07)
+## Configurações (Settings) area — added Etapa 15 (2026-08-07), extended 2026-08-08
 
 Two-level navigation:
 
 ```
 Main Sidebar (src/routes/nav-items.ts)
-  └─ "Configurações" (last item, ADMIN only via `settings.read`)
-       └─ AdminLayout <main> (the app's one true vertical scroll container)
+  └─ "Configurações" (last item, ADMIN + OPERATOR via `settings.read`)
+       └─ AdminLayout <main> (the app's one true vertical scroll container
+            for every OTHER page — Settings is the one exception, see below)
             └─ SettingsLayout (src/layouts/settings-layout.tsx)
-                 ├─ outer title/description ("Configurações")
+                 ├─ outer title/description ("Configurações") — fixed
                  ├─ SettingsSidebar (src/components/settings/settings-sidebar.tsx)
                  │    — secondary, in-page nav; vertical column on desktop
                  │      (md:w-56 md:flex-col), horizontal scrollable strip on
-                 │      narrow screens (overflow-x-auto) — never a squeezed
-                 │      narrow column, never its own vertical scrollbar
-                 └─ <Outlet /> → the selected setting's page
-                      (currently only `/settings/certificates` → CertificatesPage)
+                 │      narrow screens (overflow-x-auto) — fixed, never its
+                 │      own vertical scrollbar; filters entries by `permission`
+                 │      (Certificados hidden from OPERATOR)
+                 └─ <Outlet /> → the selected setting's page, in its OWN
+                      scrollable pane (see "Scroll policy" below)
+                      (`/settings/certificates` ADMIN-only, `/settings/personalization`
+                      and `/settings/users` reachable by ADMIN + OPERATOR)
 ```
 
-- `SETTINGS_NAV_ITEMS` (`src/routes/settings-nav-items.ts`) is the single source of truth for the secondary sidebar's entries — currently just Certificados. **Adding a future section (Segurança, Gateway, Retenção, Sistema) means appending one `NavItem` here plus one new route under `/settings/*` in `app-router.tsx` — nothing else in `SettingsSidebar`/`SettingsLayout` needs to change.**
-- Route redirect: `/settings` (index) → `Navigate to="/settings/certificates" replace` — so `/settings` never renders a blank page even with a single section.
-- Permission model: `settings.read` gates the nav item + the whole `/settings/*` route tree (via `PermissionRoute`, redirecting to `/403`). It is granted to ADMIN only, through the wildcard `'*'` in `ROLE_PERMISSIONS.ADMIN` — never added to OPERATOR/VIEWER/AUDITOR's arrays. Per-feature permissions inside a settings page (e.g. `trustedCas.create/status/delete`) follow the same ADMIN-only pattern when the real backend controller is ADMIN-only for that module.
-- Scroll policy (per `.ai/UI_RULES.md`): neither `SettingsLayout` nor `SettingsSidebar` nor any settings page may add `h-screen`/`h-dvh`/`overflow-y-auto` — `AdminLayout`'s `<main>` remains the sole scroll container. Verified by `settings-layout.test.tsx` / `settings-sidebar.test.tsx` asserting those classes are absent.
+- `SETTINGS_NAV_ITEMS` (`src/routes/settings-nav-items.ts`) is the single source of truth for the secondary sidebar's entries — Certificados, Personalização, Usuários (2026-08-08: Usuários moved here from the main Sidebar, at `/settings/users` — the old `/users` path now redirects). **Adding a future section (Segurança, Gateway, Retenção, Sistema) means appending one `NavItem` here plus one new route under `/settings/*` in `app-router.tsx` — nothing else in `SettingsSidebar`/`SettingsLayout` needs to change.**
+- Route redirect: `/settings` (index) → `SettingsIndexRedirect` (`src/routes/settings-index-redirect.tsx`), which picks the FIRST `SETTINGS_NAV_ITEMS` entry the current role can access (not a hardcoded path) — necessary since Certificados (the first entry) is ADMIN-only and a static redirect would 403 an OPERATOR landing on bare `/settings`.
+- Permission model (2026-08-08 — per-subsection, no longer one blanket gate): `settings.read` gates the nav item + entry into the `/settings/*` tree only — ADMIN and OPERATOR (no longer ADMIN-only). Each subsection then applies its OWN, stricter inner `PermissionRoute`: Certificados requires `trustedCas.read` (ADMIN only, no exceptions); Usuários requires `users.read` (ADMIN + OPERATOR, mirrors `UsersController`); Personalização has no extra route gate (anyone who reached `/settings/*` can view it), but its write actions split `branding.update` (ADMIN + OPERATOR — name/upload) from `branding.delete` (ADMIN only — reset to default), mirroring `BrandingAdminController`'s per-method `@Roles`. VIEWER/AUDITOR have none of `settings.read`/`trustedCas.*`/`users.*`/`branding.*` and never see Configurações at all.
+- Scroll policy — **deliberate exception to `.ai/UI_RULES.md`, added 2026-08-08**: Settings is treated as an internal workspace rather than a normal page. `SettingsLayout` fills `AdminLayout`'s `<main>` exactly (`h-full`, never `h-screen`/`h-dvh` — `<main>` still bounds the height) and keeps the title/description/divider and `SettingsSidebar` fixed (`shrink-0`, outside any scrolling element); only the inner content pane wrapping `<Outlet />` scrolls (`min-h-0 flex-1 overflow-y-auto`, scrollbar hidden via the existing `.hide-scrollbar` utility, same technique as the main Sidebar's nav). This means `<main>` itself never actually scrolls while a Settings page is open — there is still only ever one active vertical scrollbar. Verified by `settings-layout.test.tsx` (title/menu/link sit outside `.overflow-y-auto`, the outlet content sits inside it, no `h-screen`/`h-dvh` anywhere) and `settings-sidebar.test.tsx`.
 
 ## Per-module feature file convention (as of Etapa 15)
 
