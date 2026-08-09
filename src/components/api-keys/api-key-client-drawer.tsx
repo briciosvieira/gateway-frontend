@@ -109,80 +109,87 @@ function ApiKeyClientDrawerContent({ client }: { client: ClientRef }) {
   const pagination = apiKeysQuery.data?.pagination;
 
   return (
-    <SheetContent side="right" className="w-full overflow-y-auto p-6 sm:max-w-4xl">
-      <ClientResourceDrawerHeader
-        title={t('apiKeys.clientDrawer.title', { name: client.name })}
-        client={client}
-      />
+    <SheetContent side="right" className="w-full gap-0 p-0 sm:max-w-4xl">
+      <div className="shrink-0 p-6 pb-4">
+        <ClientResourceDrawerHeader
+          title={t('apiKeys.clientDrawer.title', { name: client.name })}
+          client={client}
+        />
+      </div>
 
-      {feedback && (
-        <p
-          role="status"
-          className={
-            feedback.type === 'success'
-              ? 'rounded-md bg-primary/10 px-4 py-2 text-sm text-primary'
-              : 'rounded-md bg-destructive/10 px-4 py-2 text-sm text-destructive'
-          }
-        >
-          {feedback.message}
-        </p>
-      )}
+      {/* Only this pane scrolls — header stays fixed above it, so the last
+          row/pagination is always reachable no matter how many API Keys the
+          client has. */}
+      <div className="min-h-0 flex-1 space-y-4 overflow-y-auto p-6 pt-0">
+        {feedback && (
+          <p
+            role="status"
+            className={
+              feedback.type === 'success'
+                ? 'rounded-md bg-primary/10 px-4 py-2 text-sm text-primary'
+                : 'rounded-md bg-destructive/10 px-4 py-2 text-sm text-destructive'
+            }
+          >
+            {feedback.message}
+          </p>
+        )}
 
-      {hasPermission('apiKeys.create') && (
-        <div className="flex justify-end">
-          <Button type="button" onClick={() => setFormDialog({ mode: 'create' })}>
-            <Plus className="size-4" aria-hidden="true" />
-            {t('apiKeys.new')}
-          </Button>
-        </div>
-      )}
+        {hasPermission('apiKeys.create') && (
+          <div className="flex justify-end">
+            <Button type="button" onClick={() => setFormDialog({ mode: 'create' })}>
+              <Plus className="size-4" aria-hidden="true" />
+              {t('apiKeys.new')}
+            </Button>
+          </div>
+        )}
 
-      <ApiKeyFilters
-        value={filters}
-        onChange={updateFilters}
-        onClear={clearFilters}
-        showClientFilter={false}
-      />
+        <ApiKeyFilters
+          value={filters}
+          onChange={updateFilters}
+          onClear={clearFilters}
+          showClientFilter={false}
+        />
 
-      <Card className="overflow-hidden p-4">
-        {apiKeysQuery.isError ? (
-          <TableErrorState
-            message={getApiErrorMessage(apiKeysQuery.error, t('apiKeys.error'))}
-            requestId={isApiError(apiKeysQuery.error) ? apiKeysQuery.error.requestId : undefined}
-            onRetry={() => void apiKeysQuery.refetch()}
-          />
-        ) : apiKeysQuery.isLoading ? (
-          <TableSkeleton columns={8} />
-        ) : rows.length === 0 ? (
-          <TableEmptyState message={t('apiKeys.clientDrawer.empty')} />
-        ) : (
-          <ApiKeysTable
-            rows={rows}
-            permissions={{
-              canUpdate: hasPermission('apiKeys.update'),
-              canChangeStatus: hasPermission('apiKeys.status'),
-              canRevoke: hasPermission('apiKeys.revoke'),
-              canRegenerate: hasPermission('apiKeys.regenerate'),
-              canDelete: hasPermission('apiKeys.delete'),
-            }}
-            onView={setDetailsApiKey}
-            onEdit={(apiKey) => setFormDialog({ mode: 'edit', apiKey })}
-            onToggleStatus={setStatusApiKey}
-            onRevoke={setRevokeApiKey}
-            onRegenerate={setRegenerateApiKey}
-            onDelete={setDeleteApiKey}
+        <Card className="overflow-hidden p-4">
+          {apiKeysQuery.isError ? (
+            <TableErrorState
+              message={getApiErrorMessage(apiKeysQuery.error, t('apiKeys.error'))}
+              requestId={isApiError(apiKeysQuery.error) ? apiKeysQuery.error.requestId : undefined}
+              onRetry={() => void apiKeysQuery.refetch()}
+            />
+          ) : apiKeysQuery.isLoading ? (
+            <TableSkeleton columns={8} />
+          ) : rows.length === 0 ? (
+            <TableEmptyState message={t('apiKeys.clientDrawer.empty')} />
+          ) : (
+            <ApiKeysTable
+              rows={rows}
+              permissions={{
+                canUpdate: hasPermission('apiKeys.update'),
+                canChangeStatus: hasPermission('apiKeys.status'),
+                canRevoke: hasPermission('apiKeys.revoke'),
+                canRegenerate: hasPermission('apiKeys.regenerate'),
+                canDelete: hasPermission('apiKeys.delete'),
+              }}
+              onView={setDetailsApiKey}
+              onEdit={(apiKey) => setFormDialog({ mode: 'edit', apiKey })}
+              onToggleStatus={setStatusApiKey}
+              onRevoke={setRevokeApiKey}
+              onRegenerate={setRegenerateApiKey}
+              onDelete={setDeleteApiKey}
+            />
+          )}
+        </Card>
+
+        {pagination && (
+          <DataTablePagination
+            page={pagination.page}
+            pageSize={pagination.limit}
+            total={pagination.total}
+            onPageChange={(page) => updateFilters({ page })}
           />
         )}
-      </Card>
-
-      {pagination && (
-        <DataTablePagination
-          page={pagination.page}
-          pageSize={pagination.limit}
-          total={pagination.total}
-          onPageChange={(page) => updateFilters({ page })}
-        />
-      )}
+      </div>
 
       {formDialog?.mode === 'create' && (
         <CreateApiKeyForm

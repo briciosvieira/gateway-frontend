@@ -1,5 +1,11 @@
 # Current Task
 
+Scroll dos Drawers por cliente (API Keys/Allowed IPs/Gateway Routes) — **concluída** (2026-08-08). Causa: `SheetContent` (`src/components/ui/sheet.tsx`) é `position: fixed`/`h-full` sem scroll próprio; as três `*ClientDrawerContent` colocavam `overflow-y-auto` direto nela, junto com o header, num único `flex flex-col` sem separação — o header ficava dentro do fluxo scrollável e nada distinguia "fixo" de "rolável". Corrigido nos 3 arquivos (`api-key-client-drawer.tsx`, `allowed-ip-client-drawer.tsx`, `gateway-route-client-drawer.tsx`), não no `sheet.tsx` compartilhado (usado por outras Sheets como o `MobileSidebar`, que já segue esse padrão corretamente e não devia ser tocado): `SheetContent` passou a `gap-0 p-0`; dentro dela, um `<div className="shrink-0 p-6 pb-4">` fixo com o `ClientResourceDrawerHeader`, seguido de um `<div className="min-h-0 flex-1 space-y-4 overflow-y-auto p-6 pt-0">` contendo botão de criar/filtros/tabela/paginação — único scroll vertical, mesmo padrão já usado em `MobileSidebar`. Diálogos (create/edit/status/delete/details) ficaram fora do wrapper de scroll (são portais Radix, posição no JSX não afeta layout). Nenhuma mudança em endpoints, React Query, paginação server-side, filtros ou permissões.
+
+Testes: `api-key-client-drawer.test.tsx`, `allowed-ip-client-drawer.test.tsx`, `gateway-route-client-drawer.test.tsx` (9 testes, sem alteração nas asserções — já passavam). `tsc -b --noEmit`, `eslint` (arquivos alterados) e `npm run build` limpos.
+
+---
+
 Ajustes visuais pontuais (2ª rodada) — **concluída** (2026-08-08). Correções pequenas sobre o estado já implementado na rodada anterior, somente CSS/layout:
 
 1. **Backend Status fora do card de Monitoring**: `ApiStatusInline` saiu de dentro do `<CardContent>` e passou a renderizar como uma linha própria logo abaixo do card (mesma célula do grid, fora do `<Card>`), via um `<div className="flex flex-col gap-1.5">` envolvendo o card e a linha de status. O card "Monitoring" voltou a mostrar só título + descrição, como os outros 5 cards.

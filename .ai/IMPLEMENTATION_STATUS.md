@@ -20,3 +20,4 @@
 - [ ] Etapa 18 — Documentação final
 - [x] Ajustes visuais/layout (2026-08-08) — Sidebar principal, Home, Backend Status, badges de status, footer da Sidebar e scroll de Configurações; ver `.ai/CURRENT_TASK.md`
 - [x] Ajustes visuais pontuais, 2ª rodada (2026-08-08) — Backend Status fora do card de Monitoring, item Configurações 100% visível na Sidebar (bug de medição do footer corrigido), tooltips da Sidebar sem risco de clipping, badges Method/Origin/HTTP Status compactos em Route Headers e Request Logs; ver `.ai/CURRENT_TASK.md`
+- [x] Scroll dos Drawers por cliente corrigido (2026-08-08) — API Keys/Allowed IPs/Gateway Routes: header fixo + único scroll vertical no conteúdo; ver `.ai/CURRENT_TASK.md`

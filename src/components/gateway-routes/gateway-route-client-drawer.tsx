@@ -114,76 +114,83 @@ function GatewayRouteClientDrawerContent({ client }: { client: ClientRef }) {
   const pagination = routesQuery.data?.pagination;
 
   return (
-    <SheetContent side="right" className="w-full overflow-y-auto p-6 sm:max-w-4xl">
-      <ClientResourceDrawerHeader
-        title={t('gatewayRoutes.clientDrawer.title', { name: client.name })}
-        client={client}
-      />
+    <SheetContent side="right" className="w-full gap-0 p-0 sm:max-w-4xl">
+      <div className="shrink-0 p-6 pb-4">
+        <ClientResourceDrawerHeader
+          title={t('gatewayRoutes.clientDrawer.title', { name: client.name })}
+          client={client}
+        />
+      </div>
 
-      {feedback && (
-        <p
-          role="status"
-          className={
-            feedback.type === 'success'
-              ? 'rounded-md bg-primary/10 px-4 py-2 text-sm text-primary'
-              : 'rounded-md bg-destructive/10 px-4 py-2 text-sm text-destructive'
-          }
-        >
-          {feedback.message}
-        </p>
-      )}
+      {/* Only this pane scrolls — header stays fixed above it, so the last
+          row/pagination is always reachable no matter how many Gateway
+          Routes the client has. */}
+      <div className="min-h-0 flex-1 space-y-4 overflow-y-auto p-6 pt-0">
+        {feedback && (
+          <p
+            role="status"
+            className={
+              feedback.type === 'success'
+                ? 'rounded-md bg-primary/10 px-4 py-2 text-sm text-primary'
+                : 'rounded-md bg-destructive/10 px-4 py-2 text-sm text-destructive'
+            }
+          >
+            {feedback.message}
+          </p>
+        )}
 
-      {hasPermission('gatewayRoutes.create') && (
-        <div className="flex justify-end">
-          <Button type="button" onClick={() => setFormDialog({ mode: 'create' })}>
-            <Plus className="size-4" aria-hidden="true" />
-            {t('gatewayRoutes.new')}
-          </Button>
-        </div>
-      )}
+        {hasPermission('gatewayRoutes.create') && (
+          <div className="flex justify-end">
+            <Button type="button" onClick={() => setFormDialog({ mode: 'create' })}>
+              <Plus className="size-4" aria-hidden="true" />
+              {t('gatewayRoutes.new')}
+            </Button>
+          </div>
+        )}
 
-      <GatewayRouteFilters
-        value={filters}
-        onChange={updateFilters}
-        onClear={clearFilters}
-        showClientFilter={false}
-      />
+        <GatewayRouteFilters
+          value={filters}
+          onChange={updateFilters}
+          onClear={clearFilters}
+          showClientFilter={false}
+        />
 
-      <Card className="overflow-hidden p-4">
-        {routesQuery.isError ? (
-          <TableErrorState
-            message={getApiErrorMessage(routesQuery.error, t('gatewayRoutes.error'))}
-            requestId={isApiError(routesQuery.error) ? routesQuery.error.requestId : undefined}
-            onRetry={() => void routesQuery.refetch()}
-          />
-        ) : routesQuery.isLoading ? (
-          <TableSkeleton columns={10} />
-        ) : rows.length === 0 ? (
-          <TableEmptyState message={t('gatewayRoutes.clientDrawer.empty')} />
-        ) : (
-          <GatewayRoutesTable
-            rows={rows}
-            permissions={{
-              canUpdate: hasPermission('gatewayRoutes.update'),
-              canChangeStatus: hasPermission('gatewayRoutes.status'),
-              canDelete: hasPermission('gatewayRoutes.delete'),
-            }}
-            onView={setDetailsRoute}
-            onEdit={(route) => setFormDialog({ mode: 'edit', route })}
-            onToggleStatus={setStatusRoute}
-            onDelete={setDeleteRoute}
+        <Card className="overflow-hidden p-4">
+          {routesQuery.isError ? (
+            <TableErrorState
+              message={getApiErrorMessage(routesQuery.error, t('gatewayRoutes.error'))}
+              requestId={isApiError(routesQuery.error) ? routesQuery.error.requestId : undefined}
+              onRetry={() => void routesQuery.refetch()}
+            />
+          ) : routesQuery.isLoading ? (
+            <TableSkeleton columns={10} />
+          ) : rows.length === 0 ? (
+            <TableEmptyState message={t('gatewayRoutes.clientDrawer.empty')} />
+          ) : (
+            <GatewayRoutesTable
+              rows={rows}
+              permissions={{
+                canUpdate: hasPermission('gatewayRoutes.update'),
+                canChangeStatus: hasPermission('gatewayRoutes.status'),
+                canDelete: hasPermission('gatewayRoutes.delete'),
+              }}
+              onView={setDetailsRoute}
+              onEdit={(route) => setFormDialog({ mode: 'edit', route })}
+              onToggleStatus={setStatusRoute}
+              onDelete={setDeleteRoute}
+            />
+          )}
+        </Card>
+
+        {pagination && (
+          <DataTablePagination
+            page={pagination.page}
+            pageSize={pagination.limit}
+            total={pagination.total}
+            onPageChange={(page) => updateFilters({ page })}
           />
         )}
-      </Card>
-
-      {pagination && (
-        <DataTablePagination
-          page={pagination.page}
-          pageSize={pagination.limit}
-          total={pagination.total}
-          onPageChange={(page) => updateFilters({ page })}
-        />
-      )}
+      </div>
 
       {formDialog?.mode === 'create' && (
         <CreateGatewayRouteForm
