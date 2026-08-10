@@ -21,6 +21,7 @@ function makeRoute(overrides: Partial<GatewayRoute>): GatewayRoute {
     timeoutMs: 30000,
     retryCount: 0,
     active: true,
+    requiresApiKey: true,
     createdAt: '2026-01-01T00:00:00.000Z',
     updatedAt: '2026-01-01T00:00:00.000Z',
     client: { id: 'client-1', name: 'Acme Corp', code: 'ACME', active: true },
@@ -125,5 +126,30 @@ describe('GatewayRoutesTable', () => {
     fireEvent.click(screen.getByRole('menuitem', { name: /Delete/ }));
 
     expect(onDelete).toHaveBeenCalledWith(expect.objectContaining({ id: 'route-1' }));
+  });
+
+  it('shows no API Key alert badge for a route that requires it', () => {
+    render(
+      <GatewayRoutesTable
+        rows={[makeRoute({ requiresApiKey: true })]}
+        permissions={ALL_PERMISSIONS}
+        {...NOOP_ACTIONS}
+      />,
+    );
+
+    expect(screen.queryByText('No API Key')).not.toBeInTheDocument();
+  });
+
+  it('shows the "No API Key" warning badge for a route with requiresApiKey=false, independently of Active/Inactive status', () => {
+    render(
+      <GatewayRoutesTable
+        rows={[makeRoute({ requiresApiKey: false, active: false })]}
+        permissions={ALL_PERMISSIONS}
+        {...NOOP_ACTIONS}
+      />,
+    );
+
+    expect(screen.getByText('No API Key')).toBeInTheDocument();
+    expect(screen.getByText('Inactive')).toBeInTheDocument();
   });
 });

@@ -9,7 +9,7 @@
 - [x] Etapa 7 — Clientes
 - [x] Etapa 8 — API Keys (reorganização "visão por cliente" concluída em 2026-08-07 consumindo o endpoint agregado real `GET /api-keys/clients-summary` — ver `.ai/BACKEND_CONTRACTS.md` e `.ai/FRONTEND_ARCHITECTURE.md`)
 - [x] Etapa 9 — Allowed IPs (idem, `GET /allowed-ips/clients-summary`)
-- [x] Etapa 10 — Gateway Routes (idem, `GET /gateway-routes/clients-summary`)
+- [x] Etapa 10 — Gateway Routes (idem, `GET /gateway-routes/clients-summary`; 2026-08-08: suporte a `requiresApiKey` — ADMIN pode desabilitar a exigência de X-API-Key por rota, badge de alerta âmbar quando desabilitada — ver `.ai/FRONTEND_ARCHITECTURE.md` e `.ai/CURRENT_TASK.md`)
 - [x] Etapa 11 — Route Headers
 - [x] Etapa 12 — Audit Logs
 - [x] Etapa 13 — Request Logs (alinhado 2026-08-07 ao contrato corrigido de `attemptedAt` NOT NULL — ver `.ai/BACKEND_CONTRACTS.md`)

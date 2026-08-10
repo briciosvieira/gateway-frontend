@@ -1,3 +1,4 @@
+import { TriangleAlert } from 'lucide-react';
 import type { ReactNode } from 'react';
 import { useTranslation } from 'react-i18next';
 
@@ -70,6 +71,23 @@ export function GatewayRouteDetailsDrawer({
             <DetailRow label={t('gatewayRoutes.form.retryCount')}>{route.retryCount}</DetailRow>
             <DetailRow label={t('gatewayRoutes.table.status')}>
               <StatusBadge active={route.active} />
+            </DetailRow>
+            <DetailRow label={t('gatewayRoutes.details.authenticationTitle')}>
+              {route.requiresApiKey ? (
+                <span className="inline-flex items-center rounded-full bg-primary/10 px-2 py-0.5 text-xs font-medium text-primary">
+                  {t('gatewayRoutes.details.apiKeyRequired')}
+                </span>
+              ) : (
+                <div className="space-y-1.5">
+                  <span className="inline-flex items-center gap-1 rounded-full bg-amber-500/10 px-2 py-0.5 text-xs font-medium text-amber-700 dark:text-amber-300">
+                    <TriangleAlert className="size-3" aria-hidden="true" />
+                    {t('gatewayRoutes.details.apiKeyDisabled')}
+                  </span>
+                  <p className="text-xs text-sidebar-muted">
+                    {t('gatewayRoutes.details.apiKeyDisabledDescription')}
+                  </p>
+                </div>
+              )}
             </DetailRow>
             <DetailRow label={t('gatewayRoutes.table.createdAt')}>
               {dateFormatter.format(new Date(route.createdAt))}

@@ -60,6 +60,7 @@ export const createGatewayRouteSchema = z.object({
   description: optionalDescriptionSchema,
   timeoutMs: timeoutMsSchema,
   retryCount: retryCountSchema,
+  requiresApiKey: z.boolean(),
 });
 
 export type CreateGatewayRouteFormValues = z.infer<typeof createGatewayRouteSchema>;

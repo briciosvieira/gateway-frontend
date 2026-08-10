@@ -715,7 +715,7 @@
     "title": "Gateway Routes",
     "description": "Gerencie as rotas públicas do Gateway.",
     "new": "Nova rota",
-    "search": "Pesquisar por nome, slug, cliente ou destino",
+    "search": "Pesquisar",
     "empty": "Nenhuma rota encontrada.",
     "error": "Não foi possível carregar as rotas.",
     "notAvailable": "—",
@@ -793,6 +793,16 @@
       "timeoutMs": "Timeout (ms)",
       "retryCount": "Tentativas de retry",
       "description": "Descrição",
+      "authenticationTitle": "Autenticação da rota",
+      "requiresApiKey": "Exigir X-API-Key",
+      "requiresApiKeyHint": "Quando habilitado, o consumidor deve enviar uma API Key válida no header X-API-Key.",
+      "requiresApiKeyAdminOnly": "Somente administradores podem desabilitar a autenticação por API Key.",
+      "disableApiKeyTitle": "Desabilitar autenticação por API Key?",
+      "disableApiKeyDescription": "Este endpoint poderá ser chamado sem o header X-API-Key. As demais proteções configuradas para a rota continuarão ativas, como status do cliente, status da rota, Allowed IPs, TLS e Route Headers. Use esta opção somente quando a integração realmente exigir acesso sem API Key.",
+      "disableApiKeyConfirm": "Desabilitar autenticação",
+      "enableApiKeyTitle": "Ativar autenticação por API Key?",
+      "enableApiKeyDescription": "Após esta alteração, o consumidor deverá enviar uma X-API-Key válida para acessar este endpoint.",
+      "enableApiKeyConfirm": "Ativar autenticação",
       "submitCreate": "Criar rota",
       "submitEdit": "Salvar alterações",
       "errors": {
@@ -818,7 +828,15 @@
       "deactivateDescription": "Tem certeza de que deseja desativar a rota {{name}}?"
     },
     "details": {
-      "title": "Detalhes da rota"
+      "title": "Detalhes da rota",
+      "authenticationTitle": "Autenticação",
+      "apiKeyRequired": "X-API-Key obrigatória",
+      "apiKeyDisabled": "X-API-Key desabilitada",
+      "apiKeyDisabledDescription": "Esta rota aceita requisições sem API Key. As demais proteções do Gateway continuam sendo aplicadas."
+    },
+    "badges": {
+      "noApiKey": "Sem API Key",
+      "noApiKeyTooltip": "Esta rota pode ser chamada sem X-API-Key."
     },
     "success": {
       "created": "Rota {{name}} criada com sucesso.",

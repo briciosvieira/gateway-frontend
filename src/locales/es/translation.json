@@ -715,7 +715,7 @@
     "title": "Gateway Routes",
     "description": "Gestione las rutas públicas del Gateway.",
     "new": "Nueva ruta",
-    "search": "Buscar por nombre, slug, cliente o destino",
+    "search": "Buscar",
     "empty": "Ninguna ruta encontrada.",
     "error": "No fue posible cargar las rutas.",
     "notAvailable": "—",
@@ -793,6 +793,16 @@
       "timeoutMs": "Timeout (ms)",
       "retryCount": "Intentos de retry",
       "description": "Descripción",
+      "authenticationTitle": "Autenticación de la ruta",
+      "requiresApiKey": "Requerir X-API-Key",
+      "requiresApiKeyHint": "Cuando está habilitado, el consumidor debe enviar una API Key válida en el header X-API-Key.",
+      "requiresApiKeyAdminOnly": "Solo los administradores pueden deshabilitar la autenticación por API Key.",
+      "disableApiKeyTitle": "¿Deshabilitar la autenticación por API Key?",
+      "disableApiKeyDescription": "Este endpoint podrá ser llamado sin el header X-API-Key. Las demás protecciones configuradas para la ruta seguirán activas, como el estado del cliente, el estado de la ruta, Allowed IPs, TLS y Route Headers. Use esta opción solo cuando la integración realmente requiera acceso sin API Key.",
+      "disableApiKeyConfirm": "Deshabilitar autenticación",
+      "enableApiKeyTitle": "¿Activar la autenticación por API Key?",
+      "enableApiKeyDescription": "Después de este cambio, el consumidor deberá enviar una X-API-Key válida para acceder a este endpoint.",
+      "enableApiKeyConfirm": "Activar autenticación",
       "submitCreate": "Crear ruta",
       "submitEdit": "Guardar cambios",
       "errors": {
@@ -818,7 +828,15 @@
       "deactivateDescription": "¿Está seguro de que desea desactivar la ruta {{name}}?"
     },
     "details": {
-      "title": "Detalles de la ruta"
+      "title": "Detalles de la ruta",
+      "authenticationTitle": "Autenticación",
+      "apiKeyRequired": "X-API-Key obligatoria",
+      "apiKeyDisabled": "X-API-Key deshabilitada",
+      "apiKeyDisabledDescription": "Esta ruta acepta solicitudes sin API Key. Las demás protecciones del Gateway se siguen aplicando."
+    },
+    "badges": {
+      "noApiKey": "Sin API Key",
+      "noApiKeyTooltip": "Esta ruta puede llamarse sin X-API-Key."
     },
     "success": {
       "created": "Ruta {{name}} creada con éxito.",

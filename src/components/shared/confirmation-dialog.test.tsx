@@ -86,6 +86,43 @@ describe('ConfirmationDialog', () => {
     expect(screen.getByRole('button', { name: 'Please wait...' })).toBeDisabled();
   });
 
+  it('uses the amber warning style (not the red destructive one) when variant="warning"', () => {
+    render(
+      <ConfirmationDialog
+        open
+        onOpenChange={() => {}}
+        title="Disable API Key authentication?"
+        description="Are you sure?"
+        confirmLabel="Disable authentication"
+        variant="warning"
+        onConfirm={() => {}}
+      />,
+    );
+
+    const confirmButton = screen.getByRole('button', { name: 'Disable authentication' });
+    expect(confirmButton.className).toMatch(/amber/);
+    expect(confirmButton.className).not.toMatch(/destructive/);
+  });
+
+  it('variant overrides the legacy destructive boolean when both are passed', () => {
+    render(
+      <ConfirmationDialog
+        open
+        onOpenChange={() => {}}
+        title="Disable API Key authentication?"
+        description="Are you sure?"
+        confirmLabel="Disable authentication"
+        destructive
+        variant="warning"
+        onConfirm={() => {}}
+      />,
+    );
+
+    expect(screen.getByRole('button', { name: 'Disable authentication' }).className).toMatch(
+      /amber/,
+    );
+  });
+
   it('renders the error message when provided', () => {
     render(
       <ConfirmationDialog

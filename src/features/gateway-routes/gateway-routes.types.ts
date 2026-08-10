@@ -23,6 +23,8 @@ export interface GatewayRoute {
   timeoutMs: number;
   retryCount: number;
   active: boolean;
+  /** `true` (default) requires a valid `X-API-Key` header; `false` skips only that check — every other protection (Allowed IP, TLS, Route Headers, Client/route `active`) still applies. Only ADMIN can set or change this to `false` (backend-enforced — see `.ai/BACKEND_CONTRACTS.md`). */
+  requiresApiKey: boolean;
   createdAt: string;
   updatedAt: string;
   client: GatewayRouteClientRef;
@@ -61,6 +63,8 @@ export interface CreateGatewayRoutePayload {
   description?: string;
   timeoutMs?: number;
   retryCount?: number;
+  /** Omit or `true` for the normal, secure default. Sending `false` is ADMIN-only — the backend returns `403 REQUIRES_API_KEY_ADMIN_ONLY` otherwise. */
+  requiresApiKey?: boolean;
 }
 
 /** `clientId` is NOT editable — absent from `UpdateGatewayRouteDto` on the real backend. */

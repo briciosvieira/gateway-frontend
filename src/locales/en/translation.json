@@ -715,7 +715,7 @@
     "title": "Gateway Routes",
     "description": "Manage the Gateway's public routes.",
     "new": "New route",
-    "search": "Search by name, slug, client or destination",
+    "search": "Search",
     "empty": "No routes found.",
     "error": "Unable to load routes.",
     "notAvailable": "—",
@@ -793,6 +793,16 @@
       "timeoutMs": "Timeout (ms)",
       "retryCount": "Retry attempts",
       "description": "Description",
+      "authenticationTitle": "Route authentication",
+      "requiresApiKey": "Require X-API-Key",
+      "requiresApiKeyHint": "When enabled, the consumer must send a valid API Key in the X-API-Key header.",
+      "requiresApiKeyAdminOnly": "Only administrators can disable API Key authentication.",
+      "disableApiKeyTitle": "Disable API Key authentication?",
+      "disableApiKeyDescription": "This endpoint will be callable without the X-API-Key header. The route's other protections remain active, such as client status, route status, Allowed IPs, TLS and Route Headers. Only use this option when the integration genuinely requires access without an API Key.",
+      "disableApiKeyConfirm": "Disable authentication",
+      "enableApiKeyTitle": "Enable API Key authentication?",
+      "enableApiKeyDescription": "After this change, the consumer will need to send a valid X-API-Key to access this endpoint.",
+      "enableApiKeyConfirm": "Enable authentication",
       "submitCreate": "Create route",
       "submitEdit": "Save changes",
       "errors": {
@@ -818,7 +828,15 @@
       "deactivateDescription": "Are you sure you want to deactivate the route {{name}}?"
     },
     "details": {
-      "title": "Route details"
+      "title": "Route details",
+      "authenticationTitle": "Authentication",
+      "apiKeyRequired": "X-API-Key required",
+      "apiKeyDisabled": "X-API-Key disabled",
+      "apiKeyDisabledDescription": "This route accepts requests without an API Key. The Gateway's other protections still apply."
+    },
+    "badges": {
+      "noApiKey": "No API Key",
+      "noApiKeyTooltip": "This route can be called without X-API-Key."
     },
     "success": {
       "created": "Route {{name}} created successfully.",
