@@ -76,4 +76,34 @@ describe('AllowedIpDeleteDialog', () => {
     await vi.waitFor(() => expect(onSuccess).toHaveBeenCalledTimes(1));
     expect(called).toBe(true);
   });
+
+  it('shows DNS as the type and deletes a HOSTNAME allowed IP the same way as IP/CIDR', async () => {
+    const hostnameAllowedIp: AllowedIp = { ...ALLOWED_IP, type: 'HOSTNAME', address: 'api.cliente.com.br' };
+    let called = false;
+    server.use(
+      http.delete(`${BASE}/allowed-ips/ip-1`, () => {
+        called = true;
+        return new HttpResponse(null, { status: 204 });
+      }),
+    );
+
+    const onSuccess = vi.fn();
+    render(
+      <AllowedIpDeleteDialog
+        open
+        allowedIp={hostnameAllowedIp}
+        onOpenChange={() => {}}
+        onSuccess={onSuccess}
+      />,
+      { wrapper: createWrapper() },
+    );
+
+    expect(screen.getByText(/api\.cliente\.com\.br/)).toBeInTheDocument();
+    expect(screen.getByText(/DNS/)).toBeInTheDocument();
+
+    fireEvent.click(screen.getByRole('button', { name: 'Delete' }));
+
+    await vi.waitFor(() => expect(onSuccess).toHaveBeenCalledTimes(1));
+    expect(called).toBe(true);
+  });
 });

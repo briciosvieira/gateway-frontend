@@ -35,6 +35,24 @@ describe('AllowedIpFilters', () => {
     expect(onChange).toHaveBeenCalledWith({ type: 'IPV4', page: 1 });
   });
 
+  it('includes DNS as a type filter option, alongside the existing IP/CIDR types', () => {
+    const onChange = vi.fn();
+    render(
+      <AllowedIpFilters
+        value={DEFAULT_ALLOWED_IPS_FILTERS}
+        onChange={onChange}
+        onClear={() => {}}
+      />,
+      { wrapper: createWrapper() },
+    );
+
+    const select = screen.getByLabelText('Type') as HTMLSelectElement;
+    expect(Array.from(select.options).map((option) => option.textContent)).toContain('DNS');
+
+    fireEvent.change(select, { target: { value: 'HOSTNAME' } });
+    expect(onChange).toHaveBeenCalledWith({ type: 'HOSTNAME', page: 1 });
+  });
+
   it('calls onChange with the status filter and resets the page', () => {
     const onChange = vi.fn();
     render(

@@ -27,9 +27,92 @@ import {
 import type {
   AllowedIp,
   AllowedIpClientOption,
+  AllowedIpType,
   UpdateAllowedIpPayload,
 } from '@/features/allowed-ips/allowed-ips.types';
 import { getApiErrorMessage } from '@/lib/api/api-response';
+
+/**
+ * UI-only grouping over the real `AllowedIpType` — the backend has no
+ * `type` input field at all (see `allowed-ips.schemas.ts`): `address` alone
+ * is parsed and classified server-side (`parseAllowedIpAddress`). This
+ * selector exists purely to drive the label/placeholder/hint below; its
+ * value is NEVER sent in the payload.
+ */
+type AllowedIpSourceType = 'IP' | 'CIDR' | 'DNS';
+
+function sourceTypeFromAllowedIpType(type: AllowedIpType): AllowedIpSourceType {
+  if (type === 'HOSTNAME') return 'DNS';
+  if (type === 'CIDR_IPV4' || type === 'CIDR_IPV6') return 'CIDR';
+  return 'IP';
+}
+
+const ADDRESS_PLACEHOLDER: Record<AllowedIpSourceType, string> = {
+  IP: '177.207.247.1',
+  CIDR: '177.207.247.0/24',
+  DNS: 'api.cliente.com.br',
+};
+
+const ADDRESS_LABEL_KEY: Record<AllowedIpSourceType, string> = {
+  IP: 'allowedIps.form.addressLabelByType.ip',
+  CIDR: 'allowedIps.form.addressLabelByType.cidr',
+  DNS: 'allowedIps.form.addressLabelByType.dns',
+};
+
+// Deliberately basic — the real format authority is the backend's
+// `parseAllowedIpAddress`/`parseAllowedHostname` (ipaddr.js + a dedicated
+// hostname parser). This only rejects the obviously-wrong shapes (protocol,
+// path, port, whitespace) before a round-trip; anything else still surfaces
+// as a translated 400 from the real request, same as IP/CIDR already do.
+const DNS_DISALLOWED_CHARACTERS = /[\s/:]/;
+
+function isObviouslyInvalidHostname(value: string): boolean {
+  return DNS_DISALLOWED_CHARACTERS.test(value.trim());
+}
+
+interface AllowedIpSourceTypeFieldProps {
+  idPrefix: string;
+  value: AllowedIpSourceType;
+  onChange: (next: AllowedIpSourceType) => void;
+}
+
+function AllowedIpSourceTypeField({ idPrefix, value, onChange }: AllowedIpSourceTypeFieldProps) {
+  const { t } = useTranslation();
+  const fieldId = `${idPrefix}-source-type`;
+
+  return (
+    <div className="space-y-1.5">
+      <label htmlFor={fieldId} className="text-sm font-medium">
+        {t('allowedIps.form.sourceType.label')}
+      </label>
+      <select
+        id={fieldId}
+        className="h-9 w-full rounded-md border border-border bg-card px-3 text-sm outline-none focus-visible:ring-2 focus-visible:ring-ring"
+        value={value}
+        onChange={(event) => onChange(event.target.value as AllowedIpSourceType)}
+      >
+        <option value="IP">{t('allowedIps.form.sourceType.ip')}</option>
+        <option value="CIDR">{t('allowedIps.form.sourceType.cidr')}</option>
+        <option value="DNS">{t('allowedIps.form.sourceType.dns')}</option>
+      </select>
+    </div>
+  );
+}
+
+function AddressFieldHint({ sourceType }: { sourceType: AllowedIpSourceType }) {
+  const { t } = useTranslation();
+
+  if (sourceType === 'DNS') {
+    return (
+      <div className="space-y-1">
+        <p className="text-xs text-muted">{t('allowedIps.form.dnsHelp')}</p>
+        <p className="text-xs text-muted-foreground">{t('allowedIps.form.dnsCacheNote')}</p>
+      </div>
+    );
+  }
+
+  return <p className="text-xs text-muted">{t('allowedIps.form.addressHint')}</p>;
+}
 
 interface CreateAllowedIpFormProps {
   open: boolean;
@@ -49,11 +132,14 @@ export function CreateAllowedIpForm({
   const mutation = useCreateAllowedIp();
   const [client, setClient] = useState<AllowedIpClientOption | null>(lockedClient ?? null);
   const [clientError, setClientError] = useState(false);
+  const [sourceType, setSourceType] = useState<AllowedIpSourceType>('IP');
 
   const {
     register,
     handleSubmit,
     reset,
+    setError,
+    clearErrors,
     formState: { errors },
   } = useForm<CreateAllowedIpFormValues>({
     resolver: zodResolver(createAllowedIpSchema),
@@ -65,6 +151,7 @@ export function CreateAllowedIpForm({
       reset();
       setClient(lockedClient ?? null);
       setClientError(false);
+      setSourceType('IP');
     }
     onOpenChange(next);
   }
@@ -75,9 +162,19 @@ export function CreateAllowedIpForm({
       return;
     }
 
+    if (sourceType === 'DNS' && isObviouslyInvalidHostname(values.address)) {
+      setError('address', { type: 'manual', message: 'allowedIps.form.errors.dnsFormatInvalid' });
+      return;
+    }
+
+    // Backend normalizes IP/CIDR itself; DNS gets the same trim+lowercase
+    // treatment client-side too (harmless — the backend does this exact
+    // normalization already), never applied to IP/CIDR values.
+    const address = sourceType === 'DNS' ? values.address.trim().toLowerCase() : values.address;
+
     try {
       const result = await mutation.mutateAsync({
-        address: values.address,
+        address,
         clientId: client.id,
         description: values.description || undefined,
       });
@@ -129,20 +226,29 @@ export function CreateAllowedIpForm({
             )}
           </div>
 
+          <AllowedIpSourceTypeField
+            idPrefix="create-allowed-ip"
+            value={sourceType}
+            onChange={(next) => {
+              setSourceType(next);
+              clearErrors('address');
+            }}
+          />
+
           <div className="space-y-1.5">
             <label htmlFor="create-allowed-ip-address" className="text-sm font-medium">
-              {t('allowedIps.form.address')}
+              {t(ADDRESS_LABEL_KEY[sourceType])}
             </label>
             <Input
               id="create-allowed-ip-address"
-              placeholder="192.168.1.0/24"
+              placeholder={ADDRESS_PLACEHOLDER[sourceType]}
               autoComplete="off"
               {...register('address')}
             />
             {errors.address?.message && (
               <p className="text-sm text-destructive">{t(errors.address.message)}</p>
             )}
-            <p className="text-xs text-muted">{t('allowedIps.form.addressHint')}</p>
+            <AddressFieldHint sourceType={sourceType} />
           </div>
 
           <div className="space-y-1.5">
@@ -195,6 +301,8 @@ export function EditAllowedIpForm({
 }: EditAllowedIpFormProps) {
   const { t } = useTranslation();
   const mutation = useUpdateAllowedIp(allowedIp.id);
+  const initialSourceType = sourceTypeFromAllowedIpType(allowedIp.type);
+  const [sourceType, setSourceType] = useState<AllowedIpSourceType>(initialSourceType);
 
   const defaultValues: UpdateAllowedIpFormValues = {
     address: allowedIp.address,
@@ -205,6 +313,8 @@ export function EditAllowedIpForm({
     register,
     handleSubmit,
     reset,
+    setError,
+    clearErrors,
     formState: { errors },
   } = useForm<UpdateAllowedIpFormValues>({
     resolver: zodResolver(updateAllowedIpSchema),
@@ -212,13 +322,23 @@ export function EditAllowedIpForm({
   });
 
   function handleOpenChange(next: boolean) {
-    if (!next) reset(defaultValues);
+    if (!next) {
+      reset(defaultValues);
+      setSourceType(initialSourceType);
+    }
     onOpenChange(next);
   }
 
   async function onSubmit(values: UpdateAllowedIpFormValues) {
+    if (sourceType === 'DNS' && isObviouslyInvalidHostname(values.address)) {
+      setError('address', { type: 'manual', message: 'allowedIps.form.errors.dnsFormatInvalid' });
+      return;
+    }
+
+    const address = sourceType === 'DNS' ? values.address.trim().toLowerCase() : values.address;
+
     const payload: UpdateAllowedIpPayload = {};
-    if (values.address !== defaultValues.address) payload.address = values.address;
+    if (address !== defaultValues.address) payload.address = address;
     if ((values.description || '') !== defaultValues.description) {
       payload.description = values.description || undefined;
     }
@@ -240,15 +360,29 @@ export function EditAllowedIpForm({
         </DialogHeader>
 
         <form className="space-y-4" onSubmit={handleSubmit(onSubmit)} noValidate>
+          <AllowedIpSourceTypeField
+            idPrefix="edit-allowed-ip"
+            value={sourceType}
+            onChange={(next) => {
+              setSourceType(next);
+              clearErrors('address');
+            }}
+          />
+
           <div className="space-y-1.5">
             <label htmlFor="edit-allowed-ip-address" className="text-sm font-medium">
-              {t('allowedIps.form.address')}
+              {t(ADDRESS_LABEL_KEY[sourceType])}
             </label>
-            <Input id="edit-allowed-ip-address" autoComplete="off" {...register('address')} />
+            <Input
+              id="edit-allowed-ip-address"
+              placeholder={ADDRESS_PLACEHOLDER[sourceType]}
+              autoComplete="off"
+              {...register('address')}
+            />
             {errors.address?.message && (
               <p className="text-sm text-destructive">{t(errors.address.message)}</p>
             )}
-            <p className="text-xs text-muted">{t('allowedIps.form.addressHint')}</p>
+            <AddressFieldHint sourceType={sourceType} />
           </div>
 
           <div className="space-y-1.5">

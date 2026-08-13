@@ -639,7 +639,8 @@
       "IPV4": "IPv4",
       "IPV6": "IPv6",
       "CIDR_IPV4": "CIDR IPv4",
-      "CIDR_IPV6": "CIDR IPv6"
+      "CIDR_IPV6": "CIDR IPv6",
+      "HOSTNAME": "DNS"
     },
     "filters": {
       "client": "Cliente",
@@ -681,12 +682,26 @@
       "client": "Cliente",
       "address": "IP ou CIDR",
       "addressHint": "Endereços IPv4/IPv6 ou redes CIDR são aceitos — o backend normaliza automaticamente (ex.: 192.168.1.50/24 vira 192.168.1.0/24).",
+      "sourceType": {
+        "label": "Tipo de origem permitida",
+        "ip": "IP",
+        "cidr": "CIDR",
+        "dns": "DNS"
+      },
+      "addressLabelByType": {
+        "ip": "Endereço IP",
+        "cidr": "Rede CIDR",
+        "dns": "Hostname / DNS"
+      },
+      "dnsHelp": "O Gateway resolverá este hostname para os IPs atuais e permitirá requisições originadas desses IPs.",
+      "dnsCacheNote": "O DNS é atualizado automaticamente conforme o tempo de cache configurado no Gateway.",
       "description": "Descrição",
       "submitCreate": "Criar Allowed IP",
       "submitEdit": "Salvar alterações",
       "errors": {
         "addressRequired": "Informe um IP ou rede CIDR.",
         "addressLength": "O endereço deve ter no máximo 100 caracteres.",
+        "dnsFormatInvalid": "Informe apenas o hostname, sem protocolo, porta ou caminho.",
         "descriptionLength": "A descrição deve ter no máximo 500 caracteres.",
         "clientRequired": "Selecione um cliente."
       }

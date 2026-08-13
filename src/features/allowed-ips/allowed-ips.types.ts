@@ -3,7 +3,7 @@ import type { ClientRef } from '@/features/clients/clients.types';
 /** Nested client reference returned inside every allowed-ip response (`allowedIpSelect`). */
 export type AllowedIpClientRef = ClientRef;
 
-export type AllowedIpType = 'IPV4' | 'IPV6' | 'CIDR_IPV4' | 'CIDR_IPV6';
+export type AllowedIpType = 'IPV4' | 'IPV6' | 'CIDR_IPV4' | 'CIDR_IPV6' | 'HOSTNAME';
 
 /**
  * Mirrors the backend's `allowedIpSelect` exactly

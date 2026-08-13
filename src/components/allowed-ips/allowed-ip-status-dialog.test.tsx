@@ -80,4 +80,38 @@ describe('AllowedIpStatusDialog', () => {
 
     await vi.waitFor(() => expect(onSuccess).toHaveBeenCalledTimes(1));
   });
+
+  it('activate/deactivate keeps working for a HOSTNAME allowed IP, same as IP/CIDR', async () => {
+    const hostnameAllowedIp: AllowedIp = { ...activeAllowedIp, type: 'HOSTNAME', address: 'api.cliente.com.br' };
+    server.use(
+      http.patch(`${BASE}/allowed-ips/ip-1/status`, () =>
+        HttpResponse.json({
+          success: true,
+          message: 'ok',
+          data: { ...hostnameAllowedIp, active: false },
+          requestId: 'req-1',
+          timestamp: '2026-08-06T12:00:00.000Z',
+        }),
+      ),
+    );
+
+    const onSuccess = vi.fn();
+    render(
+      <AllowedIpStatusDialog
+        open
+        allowedIp={hostnameAllowedIp}
+        onOpenChange={() => {}}
+        onSuccess={onSuccess}
+      />,
+      { wrapper: createWrapper() },
+    );
+
+    expect(
+      screen.getByText(/Are you sure you want to deactivate the Allowed IP api\.cliente\.com\.br/),
+    ).toBeInTheDocument();
+
+    fireEvent.click(screen.getByRole('button', { name: 'Deactivate' }));
+
+    await vi.waitFor(() => expect(onSuccess).toHaveBeenCalledTimes(1));
+  });
 });

@@ -194,16 +194,17 @@ No `DELETE` endpoint exists. Deactivation via `PATCH :id/status` is the only "re
 - `page` (default `1`), `limit` (default `20`, max `100`)
 - `search?` — matches `address`, `description`, `client.name`, `client.code`
 - `clientId?` (UUID)
-- `type?` — one of `IPV4`, `IPV6`, `CIDR_IPV4`, `CIDR_IPV6`
+- `type?` — one of `IPV4`, `IPV6`, `CIDR_IPV4`, `CIDR_IPV6`, `HOSTNAME` (2026-08-08: DNS/hostname support added — see below)
 - `active?` (boolean)
 - `sortBy?` — `'address' | 'createdAt' | 'updatedAt'` (default `'createdAt'`)
 - `sortOrder?` — `'asc' | 'desc'` (default `'desc'`)
 - No `status` string field, no `revoked` filter (this module has no revoke concept).
 
 `POST /allowed-ips` (`CreateAllowedIpDto`):
-- `address` (required, string, max 100) — **exact field name**, holds IP or CIDR, format not validated at DTO layer.
+- `address` (required, string, max 100) — **exact field name**, holds IP, CIDR **or hostname** (e.g. `api.cliente.com.br`), format not validated at DTO layer.
 - `clientId` (required, UUID).
 - `description?` (optional, string, max 500).
+- **No `type` field exists in this DTO, then or now** (2026-08-08: DNS/hostname support was added purely by extending `parseAllowedIpAddress`/`type` derivation server-side — the DTO shape itself never changed).
 
 `PATCH /allowed-ips/:id` (`UpdateAllowedIpDto`):
 - `address?`, `description?` only. **`clientId` is not editable.** `active`/status excluded (own endpoint).
@@ -232,8 +233,9 @@ Single allowed-ip shape (`allowedIpSelect`, used by every endpoint):
 
 ### Business rules
 
-- **CIDR/IP normalization** (`parseAllowedIpAddress`, via `ipaddr.js`): on create AND on update-with-address-change, the backend normalizes the network address and derives `type` automatically. Example: `192.168.1.50/24` → `192.168.1.0/24`, `type: CIDR_IPV4`. The frontend must always display the value returned by the backend, never the raw user input.
-- Invalid IP/CIDR → `400 BadRequestException('The provided IP address or CIDR network is invalid.')`.
+- **CIDR/IP/hostname normalization** (`parseAllowedIpAddress`, via `ipaddr.js` + a custom hostname parser): on create AND on update-with-address-change, the backend normalizes the address and derives `type` automatically. Example: `192.168.1.50/24` → `192.168.1.0/24`, `type: CIDR_IPV4`; `API.Cliente.com.br` → `api.cliente.com.br`, `type: HOSTNAME`. The frontend must always display the value returned by the backend, never the raw user input.
+- **Hostname format** (`parseAllowedHostname`, added 2026-08-08 — `src/modules/allowed-ips/utils/hostname-address.util.ts`): trims + lowercases, then rejects anything containing whitespace or `/:?#*@\`, a leading/trailing/double dot, a purely-numeric last label (almost certainly a malformed IP, not a real TLD), or any label failing `^[a-z0-9]([a-z0-9-]{0,61}[a-z0-9])?$`. Only a bare hostname like `api.cliente.com.br` is accepted — no protocol, port, path or query string. A hostname is resolved via forward DNS (A/AAAA) at the gateway-proxy layer and every resulting IP is treated as allowed while the resolution stays cached (cache/TTL is entirely backend-side — `AllowedHostnameResolverService` — never reimplemented or queried from the frontend).
+- Invalid IP/CIDR/hostname → **same generic** `400 BadRequestException('The provided IP address, CIDR network or hostname is invalid.')` — the backend does not distinguish which of the three formats was attempted in the error message.
 - Duplicate `(clientId, address)` → `409 ConflictException('This IP address or CIDR network is already allowed for this client.')`.
 - Client must exist (create only) → `404 NotFoundException('Client was not found.')`.
 - Client must be active to create, or to reactivate via status endpoint → `400 BadRequestException('Client is inactive.')` (not checked on deactivate, not checked on update).
@@ -245,7 +247,7 @@ Single allowed-ip shape (`allowedIpSelect`, used by every endpoint):
 - Client picker (create form + filter bar) reuses `GET /clients` via `src/features/clients/clients.service.ts` (same pattern as API Keys' client combobox) — no separate lookup service written.
 - No client-side IP/CIDR format validation — only "required, max 100 chars" is checked client-side (Zod). The real `ipaddr.js` parsing is backend-only; duplicating it risks accepting/rejecting differently than the real API. Invalid input surfaces as a translated 400 error instead.
 - Success feedback after create/update explicitly includes the normalized `address` returned by the backend (e.g. "Allowed IP criado com sucesso: 192.168.1.0/24."), not the raw value the user typed — satisfies the "always show the official value" requirement without needing a separate confirmation step.
-- `type` is never a form input — always derived/read-only, shown as a translated label (`allowedIps.types.IPV4` etc.).
+- `type` is **still never a real form field** sent to the backend — always derived/read-only in the response, shown as a translated badge (`AllowedIpTypeBadge`, `allowedIps.types.{IPV4,IPV6,CIDR_IPV4,CIDR_IPV6,HOSTNAME}`). 2026-08-08: the create/edit forms did gain a 3-way "Allowed source type" (IP/CIDR/DNS) selector, but it's **UI-only** — it only drives which label/placeholder/hint the single `address` field shows; its value is never included in the payload. For DNS specifically, the frontend adds one extra client-side guard (reject if the address contains whitespace, `/` or `:`) before ever calling the API — catches the "pasted a full URL" mistake with a friendly message, without reimplementing `parseAllowedHostname`'s full rule set.
 
 ### Known gap (not fixed, out of scope for Allowed IPs)
 

@@ -11,7 +11,13 @@ export const ALLOWED_IPS_PAGE_SIZE = 20;
 
 export const ALLOWED_IP_SORT_OPTIONS: AllowedIpSortBy[] = ['address', 'createdAt', 'updatedAt'];
 
-export const ALLOWED_IP_TYPES: AllowedIpType[] = ['IPV4', 'IPV6', 'CIDR_IPV4', 'CIDR_IPV6'];
+export const ALLOWED_IP_TYPES: AllowedIpType[] = [
+  'IPV4',
+  'IPV6',
+  'CIDR_IPV4',
+  'CIDR_IPV6',
+  'HOSTNAME',
+];
 
 export const DEFAULT_ALLOWED_IPS_FILTERS: AllowedIpsFilterState = {
   search: '',

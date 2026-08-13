@@ -1,6 +1,7 @@
 import type { ReactNode } from 'react';
 import { useTranslation } from 'react-i18next';
 
+import { AllowedIpTypeBadge } from '@/components/allowed-ips/allowed-ip-type-badge';
 import { StatusBadge } from '@/components/shared/status-badge';
 import { Sheet, SheetContent, SheetDescription, SheetTitle } from '@/components/ui/sheet';
 import type { AllowedIp } from '@/features/allowed-ips/allowed-ips.types';
@@ -49,7 +50,7 @@ export function AllowedIpDetailsDrawer({
               <span className="font-mono text-xs">{allowedIp.address}</span>
             </DetailRow>
             <DetailRow label={t('allowedIps.table.type')}>
-              {t(`allowedIps.types.${allowedIp.type}`)}
+              <AllowedIpTypeBadge type={allowedIp.type} />
             </DetailRow>
             <DetailRow label={t('allowedIps.table.client')}>{allowedIp.client.name}</DetailRow>
             <DetailRow label={t('allowedIps.form.description')}>

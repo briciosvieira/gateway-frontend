@@ -119,4 +119,45 @@ describe('AllowedIpsTable', () => {
     await openRowMenu();
     expect(screen.getByRole('menuitem', { name: /Delete/ })).toBeInTheDocument();
   });
+
+  it('shows the DNS badge and the hostname address for a HOSTNAME row', () => {
+    render(
+      <AllowedIpsTable
+        rows={[makeAllowedIp({ type: 'HOSTNAME', address: 'api.cliente.com.br' })]}
+        permissions={ALL_PERMISSIONS}
+        {...NOOP_ACTIONS}
+      />,
+    );
+
+    expect(screen.getByText('api.cliente.com.br')).toBeInTheDocument();
+    expect(screen.getByText('DNS')).toBeInTheDocument();
+  });
+
+  it('truncates a long hostname visually (via a bounded, truncating span) without altering the real value', () => {
+    const longHostname = `${'sub.'.repeat(20)}example.com`;
+    render(
+      <AllowedIpsTable
+        rows={[makeAllowedIp({ type: 'HOSTNAME', address: longHostname })]}
+        permissions={ALL_PERMISSIONS}
+        {...NOOP_ACTIONS}
+      />,
+    );
+
+    const addressSpan = screen.getByText(longHostname);
+    expect(addressSpan.className).toMatch(/truncate/);
+    expect(addressSpan.textContent).toBe(longHostname);
+  });
+
+  it('does not wrap a plain IP/CIDR address in a truncating tooltip span', () => {
+    render(
+      <AllowedIpsTable
+        rows={[makeAllowedIp({ type: 'CIDR_IPV4', address: '192.168.1.0/24' })]}
+        permissions={ALL_PERMISSIONS}
+        {...NOOP_ACTIONS}
+      />,
+    );
+
+    const addressCell = screen.getByText('192.168.1.0/24');
+    expect(addressCell.tagName).toBe('TD');
+  });
 });

@@ -107,9 +107,9 @@ describe('AllowedIpClientDrawer', () => {
 
     fireEvent.click(await screen.findByRole('button', { name: 'New Allowed IP' }));
     expect(await screen.findByText('duda N8N (duda-n8n)')).toBeInTheDocument();
-    expect(screen.queryByRole('combobox')).not.toBeInTheDocument();
+    expect(screen.queryByRole('combobox', { name: 'Client' })).not.toBeInTheDocument();
 
-    fireEvent.change(screen.getByLabelText('IP or CIDR'), {
+    fireEvent.change(screen.getByLabelText('IP address'), {
       target: { value: '192.168.1.0/24' },
     });
     fireEvent.click(screen.getByRole('button', { name: 'Create Allowed IP' }));

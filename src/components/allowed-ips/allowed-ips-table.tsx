@@ -1,6 +1,7 @@
 import { MoreHorizontal, Pencil, Power, Trash2 } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 
+import { AllowedIpTypeBadge } from '@/components/allowed-ips/allowed-ip-type-badge';
 import { StatusBadge } from '@/components/shared/status-badge';
 import { Button } from '@/components/ui/button';
 import {
@@ -9,6 +10,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
+import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 import type { AllowedIp } from '@/features/allowed-ips/allowed-ips.types';
 
 interface AllowedIpsTablePermissions {
@@ -73,10 +75,21 @@ export function AllowedIpsTable({
         <tbody className="divide-y divide-border">
           {rows.map((row) => (
             <tr key={row.id} className="hover:bg-surface/60">
-              <td className="px-4 py-2 font-mono text-xs font-medium text-foreground">
-                {row.address}
+              <td className="max-w-56 px-4 py-2 font-mono text-xs font-medium text-foreground">
+                {row.type === 'HOSTNAME' ? (
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <span className="block truncate">{row.address}</span>
+                    </TooltipTrigger>
+                    <TooltipContent>{row.address}</TooltipContent>
+                  </Tooltip>
+                ) : (
+                  row.address
+                )}
               </td>
-              <td className="px-4 py-2">{t(`allowedIps.types.${row.type}`)}</td>
+              <td className="px-4 py-2">
+                <AllowedIpTypeBadge type={row.type} />
+              </td>
               <td className="px-4 py-2">{row.client.name}</td>
               <td className="px-4 py-2">
                 <StatusBadge active={row.active} />
