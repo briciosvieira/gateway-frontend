@@ -11,8 +11,8 @@
 - [x] Etapa 9 — Allowed IPs (idem, `GET /allowed-ips/clients-summary`; 2026-08-08: suporte a origem por DNS/Hostname além de IP/CIDR — `AllowedIpType.HOSTNAME`, seletor de tipo só de UI no formulário, badge DNS na tabela/drawer, sem resolução de DNS no frontend — ver `.ai/FRONTEND_ARCHITECTURE.md` e `.ai/CURRENT_TASK.md`)
 - [x] Etapa 10 — Gateway Routes (idem, `GET /gateway-routes/clients-summary`; 2026-08-08: suporte a `requiresApiKey` — ADMIN pode desabilitar a exigência de X-API-Key por rota, badge de alerta âmbar quando desabilitada — ver `.ai/FRONTEND_ARCHITECTURE.md` e `.ai/CURRENT_TASK.md`)
 - [x] Etapa 11 — Route Headers
-- [x] Etapa 12 — Audit Logs
-- [x] Etapa 13 — Request Logs (alinhado 2026-08-07 ao contrato corrigido de `attemptedAt` NOT NULL — ver `.ai/BACKEND_CONTRACTS.md`)
+- [x] Etapa 12 — Audit Logs (2026-08-08: lista atualiza sozinha em background a cada 15s via `refetchInterval` — ver `.ai/CURRENT_TASK.md`)
+- [x] Etapa 13 — Request Logs (alinhado 2026-08-07 ao contrato corrigido de `attemptedAt` NOT NULL — ver `.ai/BACKEND_CONTRACTS.md`; 2026-08-08: lista atualiza sozinha em background a cada 15s via `refetchInterval` — ver `.ai/CURRENT_TASK.md`)
 - [ ] Etapa 14 — Meu Perfil
 - [x] Etapa 15 — Configurações (Certificados internos / Trusted CAs — ver `.ai/BACKEND_CONTRACTS.md`; ajustes visuais concluídos em 2026-08-07; seção Personalização/branding global adicionada em 2026-08-07; 2026-08-08: acesso a Configurações liberado para OPERATOR — pode tudo exceto excluir —, Certificados permanece ADMIN-only, Usuários passou a viver aqui — ver `.ai/FRONTEND_ARCHITECTURE.md`)
 - [ ] Etapa 16 — Revisão final de componentes

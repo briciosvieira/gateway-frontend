@@ -3,6 +3,7 @@ import { keepPreviousData, useQuery } from '@tanstack/react-query';
 import { findApiKeys } from '@/features/api-keys/api-keys.service';
 import { findClients } from '@/features/clients/clients.service';
 import { findGatewayRoutes } from '@/features/gateway-routes/gateway-routes.service';
+import { REQUEST_LOGS_REFETCH_INTERVAL_MS } from '@/features/request-logs/request-logs.constants';
 import { requestLogKeys } from '@/features/request-logs/request-logs.query-keys';
 import { findRequestLogs } from '@/features/request-logs/request-logs.service';
 import type { FindRequestLogsParams } from '@/features/request-logs/request-logs.types';
@@ -20,6 +21,9 @@ export function useRequestLogs(params: FindRequestLogsParams, enabled: boolean =
     staleTime: 30_000,
     retry: requestLogsRetry,
     placeholderData: keepPreviousData,
+    // Only while the tab is visible (TanStack Query's default) — polling a
+    // backgrounded tab would waste requests without anyone watching.
+    refetchInterval: REQUEST_LOGS_REFETCH_INTERVAL_MS,
     enabled,
   });
 }
