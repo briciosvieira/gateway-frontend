@@ -1,4 +1,4 @@
-import { LogOut, PanelLeftClose, PanelLeftOpen } from 'lucide-react';
+import { LogOut } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 
 import { LanguageSelector } from '@/components/language/language-selector';
@@ -10,18 +10,15 @@ import { cn } from '@/lib/utils';
 
 interface SidebarFooterProps {
   collapsed: boolean;
-  /** Omitted on `MobileSidebar` (a Sheet has no collapse/expand concept of its own). */
-  onToggleSidebar?: () => void;
 }
 
 /**
  * All footer utility controls in one aligned group: language, theme and
- * collapse/expand form the "settings" cluster, logout sits at the opposite
- * end of the same row — never its own separate row, so it reads as part of
- * the group instead of floating disconnected from it. Collapses to a single
- * centered icon column when the Sidebar itself is collapsed.
+ * logout — never split across separate rows, so it always reads as one
+ * group. Stacks into a single centered icon column when the Sidebar itself
+ * is compact (icon-only rail); lays out as a row once expanded.
  */
-export function SidebarFooter({ collapsed, onToggleSidebar }: SidebarFooterProps) {
+export function SidebarFooter({ collapsed }: SidebarFooterProps) {
   const { t } = useTranslation();
   const { submit, isLoggingOut } = useLogout();
 
@@ -50,25 +47,6 @@ export function SidebarFooter({ collapsed, onToggleSidebar }: SidebarFooterProps
       <div className={cn('flex items-center gap-1', collapsed && 'flex-col')}>
         <LanguageSelector />
         <ThemeToggle />
-
-        {onToggleSidebar && (
-          <Tooltip>
-            <TooltipTrigger asChild>
-              <Button
-                type="button"
-                variant="ghost"
-                size="icon"
-                aria-label={t(collapsed ? 'sidebar.expand' : 'sidebar.collapse')}
-                onClick={onToggleSidebar}
-              >
-                {collapsed ? <PanelLeftOpen /> : <PanelLeftClose />}
-              </Button>
-            </TooltipTrigger>
-            <TooltipContent side={collapsed ? 'right' : 'top'}>
-              {t(collapsed ? 'sidebar.expand' : 'sidebar.collapse')}
-            </TooltipContent>
-          </Tooltip>
-        )}
       </div>
 
       <Tooltip>

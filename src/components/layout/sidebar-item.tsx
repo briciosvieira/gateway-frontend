@@ -22,7 +22,7 @@ export function SidebarItem({ item, collapsed, onNavigate }: SidebarItemProps) {
       onClick={onNavigate}
       className={({ isActive }) =>
         cn(
-          'flex h-10 items-center gap-3 rounded-lg px-3 text-sm font-medium text-sidebar-foreground/80 transition-colors hover:bg-surface hover:text-sidebar-foreground',
+          'flex h-10 items-center gap-3 rounded-lg px-3 text-sm font-medium text-nav-sidebar-foreground/80 transition-colors hover:bg-surface hover:text-nav-sidebar-foreground',
           collapsed && 'justify-center px-0',
           isActive && 'bg-primary/15 text-primary hover:bg-primary/15 hover:text-primary',
         )

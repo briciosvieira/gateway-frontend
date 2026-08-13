@@ -11,6 +11,11 @@
   --color-sidebar-muted: var(--sidebar-muted);
   --color-sidebar-border: var(--sidebar-border);
 
+  --color-nav-sidebar: var(--nav-sidebar);
+  --color-nav-sidebar-foreground: var(--nav-sidebar-foreground);
+  --color-nav-sidebar-muted: var(--nav-sidebar-muted);
+  --color-nav-sidebar-border: var(--nav-sidebar-border);
+
   --color-primary: var(--primary);
   --color-primary-hover: var(--primary-hover);
   --color-primary-foreground: var(--primary-foreground);
@@ -47,6 +52,18 @@
   --sidebar-foreground: #0f172a;
   --sidebar-muted: #64748b;
   --sidebar-border: #dbe3ee;
+
+  /* The main navigation rail's own chrome — deliberately theme-independent
+     (not redefined under `.dark`) and NOT the same as `--sidebar` above,
+     which every feature's details `Sheet` (API Keys, Allowed IPs, Gateway
+     Routes, Logs, etc.) also uses — retinting `--sidebar` would repaint all
+     of those. This one is exclusive to the nav rail (`Sidebar`/
+     `MobileSidebar` + their shared sub-components) so it can stay a
+     constant near-black navy regardless of the app's light/dark theme. */
+  --nav-sidebar: #121a26;
+  --nav-sidebar-foreground: #f8fafc;
+  --nav-sidebar-muted: #94a3b8;
+  --nav-sidebar-border: #202b3a;
 
   --primary: #2563eb;
   --primary-hover: #1d4ed8;

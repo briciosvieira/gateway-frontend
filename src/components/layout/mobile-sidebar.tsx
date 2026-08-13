@@ -31,14 +31,14 @@ export function MobileSidebar() {
         </Button>
       </SheetTrigger>
 
-      <SheetContent side="left" className="w-72 p-0">
+      <SheetContent side="left" className="w-72 bg-nav-sidebar p-0 text-nav-sidebar-foreground">
         <SheetTitle className="sr-only">{branding.applicationName}</SheetTitle>
 
         <div className="flex h-16 items-center px-3">
           <AppLogo />
         </div>
 
-        <Separator className="bg-sidebar-border" />
+        <Separator className="bg-nav-sidebar-border" />
 
         <nav className="hide-scrollbar flex flex-1 flex-col gap-1 overflow-y-auto p-3">
           {visibleNavItems.map((item) => (
@@ -51,7 +51,7 @@ export function MobileSidebar() {
           ))}
         </nav>
 
-        <Separator className="bg-sidebar-border" />
+        <Separator className="bg-nav-sidebar-border" />
 
         <div className="flex flex-col gap-2 p-3">
           <SidebarUser collapsed={false} />

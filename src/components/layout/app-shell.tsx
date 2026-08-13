@@ -14,7 +14,7 @@ export function AppShell({ children }: AppShellProps) {
       <Sidebar />
 
       <div className="flex min-w-0 flex-1 flex-col overflow-hidden">
-        <header className="flex h-16 shrink-0 items-center justify-between border-b border-sidebar-border bg-sidebar px-4 md:hidden">
+        <header className="flex h-16 shrink-0 items-center justify-between border-b border-nav-sidebar-border bg-nav-sidebar px-4 text-nav-sidebar-foreground md:hidden">
           <AppLogo />
           <MobileSidebar />
         </header>

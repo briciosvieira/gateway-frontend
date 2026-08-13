@@ -12,7 +12,7 @@ export function AppLogo({ collapsed = false }: AppLogoProps) {
     <div className="flex items-center gap-2 overflow-hidden">
       <img src={branding.logoUrl} alt="" className="size-6 shrink-0" aria-hidden="true" />
       {!collapsed && (
-        <span className="truncate text-sm font-semibold text-sidebar-foreground">
+        <span className="truncate text-sm font-semibold text-nav-sidebar-foreground">
           {branding.applicationName}
         </span>
       )}
