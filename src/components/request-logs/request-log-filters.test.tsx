@@ -21,6 +21,8 @@ describe('RequestLogFilters', () => {
       />,
     );
 
+    fireEvent.click(screen.getByRole('button', { name: 'Filters' }));
+
     fireEvent.change(screen.getByLabelText('Start date'), { target: { value: '2026-08-07' } });
     expect(onChange).toHaveBeenCalledWith({ startDate: '2026-08-07', page: 1 });
 
@@ -54,6 +56,8 @@ describe('RequestLogFilters', () => {
       />,
     );
 
+    fireEvent.click(screen.getByRole('button', { name: 'Filters' }));
+
     const sortBySelect = screen.getByLabelText('Sort by') as HTMLSelectElement;
     const optionLabels = Array.from(sortBySelect.options).map((option) => option.textContent);
     expect(optionLabels).toEqual(['Attempted at', 'Duration', 'HTTP status', 'Created at']);
@@ -76,6 +80,7 @@ describe('RequestLogFilters', () => {
       />,
     );
 
+    fireEvent.click(screen.getByRole('button', { name: 'Filters' }));
     expect(screen.getByRole('button', { name: 'Clear filters' })).toBeEnabled();
   });
 
@@ -89,6 +94,7 @@ describe('RequestLogFilters', () => {
       />,
     );
 
+    fireEvent.click(screen.getByRole('button', { name: 'Filters' }));
     expect(screen.getByRole('button', { name: 'Clear filters' })).toBeDisabled();
   });
 });

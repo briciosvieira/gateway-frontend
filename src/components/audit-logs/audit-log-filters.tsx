@@ -1,5 +1,6 @@
 import { useTranslation } from 'react-i18next';
 
+import { CollapsibleFilterPanel } from '@/components/shared/collapsible-filter-panel';
 import { FilterSelect } from '@/components/shared/filter-select';
 import { SearchInput } from '@/components/shared/search-input';
 import { Button } from '@/components/ui/button';
@@ -30,16 +31,20 @@ export function AuditLogFilters({
     value.endDate !== '';
 
   return (
-    <div className="grid gap-3 rounded-lg border border-border bg-card p-4 md:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4">
-      <SearchInput
-        id="audit-logs-filter-search"
-        label={t('auditLogs.filters.search')}
-        placeholder={t('auditLogs.filters.searchPlaceholder')}
-        value={value.search}
-        onChange={(search) => onChange({ search, page: 1 })}
-        className="md:col-span-2 xl:col-span-2"
-      />
-
+    <CollapsibleFilterPanel
+      gridClassName="md:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4"
+      hasActiveFilters={hasActiveFilters}
+      defaultExpanded={Boolean(dateRangeError)}
+      searchSlot={
+        <SearchInput
+          id="audit-logs-filter-search"
+          label={t('auditLogs.filters.search')}
+          placeholder={t('auditLogs.filters.searchPlaceholder')}
+          value={value.search}
+          onChange={(search) => onChange({ search, page: 1 })}
+        />
+      }
+    >
       <FilterSelect
         id="audit-logs-filter-action"
         label={t('auditLogs.filters.action')}
@@ -119,6 +124,6 @@ export function AuditLogFilters({
           {dateRangeError}
         </p>
       )}
-    </div>
+    </CollapsibleFilterPanel>
   );
 }

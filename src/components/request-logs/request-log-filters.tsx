@@ -1,5 +1,6 @@
 import { useTranslation } from 'react-i18next';
 
+import { CollapsibleFilterPanel } from '@/components/shared/collapsible-filter-panel';
 import { FilterSelect } from '@/components/shared/filter-select';
 import { SearchInput } from '@/components/shared/search-input';
 import { Button } from '@/components/ui/button';
@@ -40,16 +41,20 @@ export function RequestLogFilters({
     value.sortOrder !== DEFAULT_REQUEST_LOG_FILTERS.sortOrder;
 
   return (
-    <div className="grid gap-3 rounded-lg border border-border bg-card p-4 md:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4">
-      <SearchInput
-        id="request-logs-filter-search"
-        label={t('requestLogs.filters.search')}
-        placeholder={t('requestLogs.filters.searchPlaceholder')}
-        value={value.search}
-        onChange={(search) => onChange({ search, page: 1 })}
-        className="md:col-span-2 xl:col-span-3"
-      />
-
+    <CollapsibleFilterPanel
+      gridClassName="md:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4"
+      hasActiveFilters={hasActiveFilters}
+      defaultExpanded={Boolean(dateRangeError)}
+      searchSlot={
+        <SearchInput
+          id="request-logs-filter-search"
+          label={t('requestLogs.filters.search')}
+          placeholder={t('requestLogs.filters.searchPlaceholder')}
+          value={value.search}
+          onChange={(search) => onChange({ search, page: 1 })}
+        />
+      }
+    >
       <FilterSelect
         id="request-logs-filter-origin"
         label={t('requestLogs.filters.origin')}
@@ -180,6 +185,6 @@ export function RequestLogFilters({
           {dateRangeError}
         </p>
       )}
-    </div>
+    </CollapsibleFilterPanel>
   );
 }

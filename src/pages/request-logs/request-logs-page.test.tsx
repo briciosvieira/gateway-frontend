@@ -154,6 +154,7 @@ describe('RequestLogsPage', () => {
 
     renderPage();
     await screen.findByText('10.0.0.101');
+    fireEvent.click(screen.getByRole('button', { name: 'Filters' }));
 
     fireEvent.change(screen.getByLabelText('Start date'), { target: { value: '2026-08-07' } });
     fireEvent.change(screen.getByLabelText('End date'), { target: { value: '2026-08-07' } });
@@ -233,6 +234,7 @@ describe('RequestLogsPage', () => {
 
     renderPage();
     await screen.findByText('10.0.0.101');
+    fireEvent.click(screen.getByRole('button', { name: 'Filters' }));
     const countAfterInitialLoad = requestCount;
 
     fireEvent.change(screen.getByLabelText('Start date'), { target: { value: '2026-08-10' } });
@@ -257,6 +259,7 @@ describe('RequestLogsPage', () => {
     renderPage();
     await screen.findByText('10.0.0.101');
     expect(lastPage).toBe('1');
+    fireEvent.click(screen.getByRole('button', { name: 'Filters' }));
 
     fireEvent.click(screen.getByRole('button', { name: 'Next' }));
     await screen.findByText('10.0.0.101');
@@ -278,6 +281,7 @@ describe('RequestLogsPage', () => {
 
     renderPage();
     await screen.findByText('10.0.0.101');
+    fireEvent.click(screen.getByRole('button', { name: 'Filters' }));
 
     fireEvent.click(screen.getByRole('button', { name: 'Next' }));
     await screen.findByText('10.0.0.101');
@@ -299,6 +303,7 @@ describe('RequestLogsPage', () => {
 
     renderPage();
     await screen.findByText('10.0.0.101');
+    fireEvent.click(screen.getByRole('button', { name: 'Filters' }));
     const afterInitial = requestCount;
 
     fireEvent.change(screen.getByLabelText('Start date'), { target: { value: '2026-08-01' } });

@@ -287,6 +287,9 @@
       "active": "Active",
       "inactive": "Inactive"
     },
+    "filters": {
+      "toggle": "Filters"
+    },
     "clientResource": {
       "client": "Client",
       "identifier": "Identifier",

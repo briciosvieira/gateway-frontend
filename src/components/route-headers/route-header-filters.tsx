@@ -1,5 +1,6 @@
 import { useTranslation } from 'react-i18next';
 
+import { CollapsibleFilterPanel } from '@/components/shared/collapsible-filter-panel';
 import { Combobox } from '@/components/shared/combobox';
 import { FilterSelect } from '@/components/shared/filter-select';
 import { SearchInput } from '@/components/shared/search-input';
@@ -29,15 +30,19 @@ export function RouteHeaderFilters({ value, onChange, onClear }: RouteHeaderFilt
     value.sortOrder !== DEFAULT_ROUTE_HEADERS_FILTERS.sortOrder;
 
   return (
-    <div className="grid gap-3 rounded-lg border border-border bg-card p-4 md:grid-cols-2 xl:grid-cols-4">
-      <SearchInput
-        id="route-headers-filter-search"
-        label={t('routeHeaders.search')}
-        placeholder={t('routeHeaders.search')}
-        value={value.search}
-        onChange={(search) => onChange({ search, page: 1 })}
-      />
-
+    <CollapsibleFilterPanel
+      gridClassName="md:grid-cols-2 xl:grid-cols-4"
+      hasActiveFilters={hasActiveFilters}
+      searchSlot={
+        <SearchInput
+          id="route-headers-filter-search"
+          label={t('routeHeaders.search')}
+          placeholder={t('routeHeaders.search')}
+          value={value.search}
+          onChange={(search) => onChange({ search, page: 1 })}
+        />
+      }
+    >
       <Combobox
         label={t('routeHeaders.filters.gatewayRoute')}
         placeholder={t('routeHeaders.filters.gatewayRoutePlaceholder')}
@@ -114,6 +119,6 @@ export function RouteHeaderFilters({ value, onChange, onClear }: RouteHeaderFilt
           {t('routeHeaders.filters.clear')}
         </Button>
       </div>
-    </div>
+    </CollapsibleFilterPanel>
   );
 }

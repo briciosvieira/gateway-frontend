@@ -1,5 +1,6 @@
 import { useTranslation } from 'react-i18next';
 
+import { CollapsibleFilterPanel } from '@/components/shared/collapsible-filter-panel';
 import { FilterSelect } from '@/components/shared/filter-select';
 import { SearchInput } from '@/components/shared/search-input';
 import { Button } from '@/components/ui/button';
@@ -26,15 +27,19 @@ export function TrustedCaFilters({ value, onChange, onClear }: TrustedCaFiltersP
     value.sortOrder !== DEFAULT_TRUSTED_CAS_FILTERS.sortOrder;
 
   return (
-    <div className="grid gap-3 rounded-lg border border-border bg-card p-4 md:grid-cols-2 xl:grid-cols-3">
-      <SearchInput
-        id="trusted-cas-filter-search"
-        label={t('settings.certificates.search')}
-        placeholder={t('settings.certificates.search')}
-        value={value.search}
-        onChange={(search) => onChange({ search, page: 1 })}
-      />
-
+    <CollapsibleFilterPanel
+      gridClassName="md:grid-cols-2 xl:grid-cols-3"
+      hasActiveFilters={hasActiveFilters}
+      searchSlot={
+        <SearchInput
+          id="trusted-cas-filter-search"
+          label={t('settings.certificates.search')}
+          placeholder={t('settings.certificates.search')}
+          value={value.search}
+          onChange={(search) => onChange({ search, page: 1 })}
+        />
+      }
+    >
       <FilterSelect
         id="trusted-cas-filter-status"
         label={t('settings.certificates.filters.status')}
@@ -100,6 +105,6 @@ export function TrustedCaFilters({ value, onChange, onClear }: TrustedCaFiltersP
           {t('settings.certificates.filters.clear')}
         </Button>
       </div>
-    </div>
+    </CollapsibleFilterPanel>
   );
 }
