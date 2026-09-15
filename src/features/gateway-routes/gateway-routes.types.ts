@@ -25,6 +25,8 @@ export interface GatewayRoute {
   active: boolean;
   /** `true` (default) requires a valid `X-API-Key` header; `false` skips only that check — every other protection (Allowed IP, TLS, Route Headers, Client/route `active`) still applies. Only ADMIN can set or change this to `false` (backend-enforced — see `.ai/BACKEND_CONTRACTS.md`). */
   requiresApiKey: boolean;
+  /** `true` (default) requires the source IP/hostname to match an active Allowed IP entry for the client; `false` skips only that check — every other protection still applies. Independent from `requiresApiKey`; no role restriction on either. */
+  requiresAllowedIp: boolean;
   createdAt: string;
   updatedAt: string;
   client: GatewayRouteClientRef;
@@ -65,6 +67,8 @@ export interface CreateGatewayRoutePayload {
   retryCount?: number;
   /** Omit or `true` for the normal, secure default. Sending `false` is ADMIN-only — the backend returns `403 REQUIRES_API_KEY_ADMIN_ONLY` otherwise. */
   requiresApiKey?: boolean;
+  /** Omit or `true` for the normal, secure default. No role restriction (unlike `requiresApiKey`). */
+  requiresAllowedIp?: boolean;
 }
 
 /** `clientId` is NOT editable — absent from `UpdateGatewayRouteDto` on the real backend. */

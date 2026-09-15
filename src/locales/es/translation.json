@@ -811,10 +811,12 @@
       "timeoutMs": "Timeout (ms)",
       "retryCount": "Intentos de retry",
       "description": "Descripción",
-      "authenticationTitle": "Autenticación de la ruta",
+      "authenticationTitle": "Seguridad de la ruta",
       "requiresApiKey": "Requerir X-API-Key",
       "requiresApiKeyHint": "Cuando está habilitado, el consumidor debe enviar una API Key válida en el header X-API-Key.",
       "requiresApiKeyAdminOnly": "Solo los administradores pueden deshabilitar la autenticación por API Key.",
+      "requiresAllowedIp": "Restringir por IP/DNS",
+      "requiresAllowedIpHint": "Cuando está habilitado, el origen de la solicitud debe corresponder a una IP, red o DNS registrado en Allowed IPs para el cliente.",
       "disableApiKeyTitle": "¿Deshabilitar la autenticación por API Key?",
       "disableApiKeyDescription": "Este endpoint podrá ser llamado sin el header X-API-Key. Las demás protecciones configuradas para la ruta seguirán activas, como el estado del cliente, el estado de la ruta, Allowed IPs, TLS y Route Headers. Use esta opción solo cuando la integración realmente requiera acceso sin API Key.",
       "disableApiKeyConfirm": "Deshabilitar autenticación",
@@ -850,11 +852,17 @@
       "authenticationTitle": "Autenticación",
       "apiKeyRequired": "X-API-Key obligatoria",
       "apiKeyDisabled": "X-API-Key deshabilitada",
-      "apiKeyDisabledDescription": "Esta ruta acepta solicitudes sin API Key. Las demás protecciones del Gateway se siguen aplicando."
+      "apiKeyDisabledDescription": "Esta ruta acepta solicitudes sin API Key. Las demás protecciones del Gateway se siguen aplicando.",
+      "allowedIpTitle": "Restricción por IP/DNS",
+      "allowedIpRequired": "IP/DNS restringido",
+      "allowedIpDisabled": "Cualquier origen",
+      "allowedIpDisabledDescription": "Esta ruta acepta solicitudes desde cualquier IP de origen. Las demás protecciones del Gateway se siguen aplicando."
     },
     "badges": {
       "noApiKey": "Sin API Key",
-      "noApiKeyTooltip": "Esta ruta puede llamarse sin X-API-Key."
+      "noApiKeyTooltip": "Esta ruta puede llamarse sin X-API-Key.",
+      "noAllowedIp": "Cualquier origen",
+      "noAllowedIpTooltip": "Esta ruta acepta solicitudes desde cualquier IP de origen, sin restricción por Allowed IPs."
     },
     "success": {
       "created": "Ruta {{name}} creada con éxito.",

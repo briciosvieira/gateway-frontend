@@ -47,6 +47,7 @@ const ROUTE: GatewayRoute = {
   retryCount: 0,
   active: true,
   requiresApiKey: true,
+  requiresAllowedIp: true,
   createdAt: '2026-01-01T00:00:00.000Z',
   updatedAt: '2026-01-01T00:00:00.000Z',
   client: { id: 'client-1', name: 'Acme Corp', code: 'ACME', active: true },
@@ -54,6 +55,7 @@ const ROUTE: GatewayRoute = {
 };
 
 const ROUTE_NO_API_KEY: GatewayRoute = { ...ROUTE, requiresApiKey: false };
+const ROUTE_NO_ALLOWED_IP: GatewayRoute = { ...ROUTE, requiresAllowedIp: false };
 
 function successBody<T>(data: T) {
   return {
@@ -219,6 +221,56 @@ describe('CreateGatewayRouteForm', () => {
 
     await waitFor(() => expect(onSuccess).toHaveBeenCalledWith(ROUTE_NO_API_KEY));
   });
+
+  it('defaults requiresAllowedIp to checked (true) and sends it as true when untouched', async () => {
+    let capturedBody: Record<string, unknown> | undefined;
+    server.use(
+      http.get(`${BASE}/clients`, () =>
+        HttpResponse.json(
+          successBody({
+            items: [{ id: 'client-1', name: 'Acme Corp', code: 'ACME' }],
+            pagination: { page: 1, limit: 10, total: 1, totalPages: 1 },
+            filters: {},
+          }),
+        ),
+      ),
+      http.post(`${BASE}/gateway-routes`, async ({ request }) => {
+        capturedBody = (await request.json()) as Record<string, unknown>;
+        return HttpResponse.json(successBody(ROUTE));
+      }),
+    );
+
+    render(<CreateGatewayRouteForm open onOpenChange={() => {}} onSuccess={() => {}} />, {
+      wrapper: createWrapper(),
+    });
+
+    expect(screen.getByLabelText('Restrict by IP/DNS')).toBeChecked();
+
+    await selectClientAndFill();
+    fireEvent.click(screen.getByRole('button', { name: 'Create route' }));
+
+    await waitFor(() => expect(capturedBody?.requiresAllowedIp).toBe(true));
+  });
+
+  it('lets an OPERATOR uncheck requiresAllowedIp with no confirmation dialog (no permission gate)', async () => {
+    mockRoleCode = 'OPERATOR';
+    mockClientsAndCreate(ROUTE_NO_ALLOWED_IP);
+
+    const onSuccess = vi.fn();
+    render(<CreateGatewayRouteForm open onOpenChange={() => {}} onSuccess={onSuccess} />, {
+      wrapper: createWrapper(),
+    });
+
+    const checkbox = screen.getByLabelText('Restrict by IP/DNS');
+    expect(checkbox).not.toBeDisabled();
+
+    await selectClientAndFill();
+    fireEvent.click(checkbox);
+    fireEvent.click(screen.getByRole('button', { name: 'Create route' }));
+
+    expect(screen.queryByText('Disable API Key authentication?')).not.toBeInTheDocument();
+    await waitFor(() => expect(onSuccess).toHaveBeenCalledWith(ROUTE_NO_ALLOWED_IP));
+  });
 });
 
 describe('EditGatewayRouteForm', () => {
@@ -378,5 +430,99 @@ describe('EditGatewayRouteForm', () => {
 
     await waitFor(() => expect(onSuccess).toHaveBeenCalled());
     expect(capturedBody).toEqual({ requiresApiKey: true });
+  });
+
+  it('loads requiresAllowedIp=true exactly as returned by the backend', () => {
+    render(
+      <EditGatewayRouteForm open route={ROUTE} onOpenChange={() => {}} onSuccess={() => {}} />,
+      { wrapper: createWrapper() },
+    );
+
+    expect(screen.getByLabelText('Restrict by IP/DNS')).toBeChecked();
+  });
+
+  it('loads requiresAllowedIp=false exactly as returned by the backend, never assuming true', () => {
+    render(
+      <EditGatewayRouteForm
+        open
+        route={ROUTE_NO_ALLOWED_IP}
+        onOpenChange={() => {}}
+        onSuccess={() => {}}
+      />,
+      { wrapper: createWrapper() },
+    );
+
+    expect(screen.getByLabelText('Restrict by IP/DNS')).not.toBeChecked();
+  });
+
+  it('ADMIN changing requiresAllowedIp saves immediately, with no confirmation dialog', async () => {
+    let capturedBody: Record<string, unknown> | undefined;
+    server.use(
+      http.patch(`${BASE}/gateway-routes/:id`, async ({ request }) => {
+        capturedBody = (await request.json()) as Record<string, unknown>;
+        return HttpResponse.json(successBody(ROUTE_NO_ALLOWED_IP));
+      }),
+    );
+
+    const onSuccess = vi.fn();
+    render(
+      <EditGatewayRouteForm open route={ROUTE} onOpenChange={() => {}} onSuccess={onSuccess} />,
+      { wrapper: createWrapper() },
+    );
+
+    fireEvent.click(screen.getByLabelText('Restrict by IP/DNS'));
+    fireEvent.click(screen.getByRole('button', { name: 'Save changes' }));
+
+    expect(screen.queryByText('Disable API Key authentication?')).not.toBeInTheDocument();
+    await waitFor(() => expect(onSuccess).toHaveBeenCalled());
+    expect(capturedBody).toEqual({ requiresAllowedIp: false });
+  });
+
+  it('OPERATOR can toggle requiresAllowedIp too (no permission gate), unlike requiresApiKey', async () => {
+    mockRoleCode = 'OPERATOR';
+    let capturedBody: Record<string, unknown> | undefined;
+    server.use(
+      http.patch(`${BASE}/gateway-routes/:id`, async ({ request }) => {
+        capturedBody = (await request.json()) as Record<string, unknown>;
+        return HttpResponse.json(successBody(ROUTE_NO_ALLOWED_IP));
+      }),
+    );
+
+    const onSuccess = vi.fn();
+    render(
+      <EditGatewayRouteForm open route={ROUTE} onOpenChange={() => {}} onSuccess={onSuccess} />,
+      { wrapper: createWrapper() },
+    );
+
+    const allowedIpCheckbox = screen.getByLabelText('Restrict by IP/DNS');
+    expect(allowedIpCheckbox).not.toBeDisabled();
+
+    fireEvent.click(allowedIpCheckbox);
+    fireEvent.click(screen.getByRole('button', { name: 'Save changes' }));
+
+    await waitFor(() => expect(onSuccess).toHaveBeenCalled());
+    expect(capturedBody).toEqual({ requiresAllowedIp: false });
+  });
+
+  it('leaves requiresAllowedIp out of the payload when only an unrelated field changes', async () => {
+    let capturedBody: unknown;
+    server.use(
+      http.patch(`${BASE}/gateway-routes/:id`, async ({ request }) => {
+        capturedBody = await request.json();
+        return HttpResponse.json(successBody({ ...ROUTE, name: 'Renamed' }));
+      }),
+    );
+
+    const onSuccess = vi.fn();
+    render(
+      <EditGatewayRouteForm open route={ROUTE} onOpenChange={() => {}} onSuccess={onSuccess} />,
+      { wrapper: createWrapper() },
+    );
+
+    fireEvent.change(screen.getByLabelText('Name'), { target: { value: 'Renamed' } });
+    fireEvent.click(screen.getByRole('button', { name: 'Save changes' }));
+
+    await waitFor(() => expect(onSuccess).toHaveBeenCalled());
+    expect(capturedBody).toEqual({ name: 'Renamed' });
   });
 });

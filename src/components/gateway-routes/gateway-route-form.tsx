@@ -56,14 +56,15 @@ function toPayload(
     timeoutMs: values.timeoutMs,
     retryCount: values.retryCount,
     requiresApiKey: values.requiresApiKey,
+    requiresAllowedIp: values.requiresAllowedIp,
   };
 }
 
 /**
- * Shared by both Create and Edit forms — `requiresApiKey` is ADMIN-only to
- * change (backend-enforced, `403 REQUIRES_API_KEY_ADMIN_ONLY` otherwise), so
- * OPERATOR/VIEWER/AUDITOR get a disabled, tooltip-explained checkbox that
- * always reflects the current value but can never be toggled.
+ * `requiresApiKey` is ADMIN-only to change (backend-enforced, `403
+ * REQUIRES_API_KEY_ADMIN_ONLY` otherwise), so OPERATOR/VIEWER/AUDITOR get a
+ * disabled, tooltip-explained checkbox that always reflects the current
+ * value but can never be toggled.
  */
 function RequiresApiKeyField({
   idPrefix,
@@ -95,7 +96,6 @@ function RequiresApiKeyField({
 
   return (
     <div className="space-y-1.5">
-      <span className="text-sm font-medium">{t('gatewayRoutes.form.authenticationTitle')}</span>
       {isAdmin ? (
         checkboxLabel
       ) : (
@@ -105,6 +105,58 @@ function RequiresApiKeyField({
         </Tooltip>
       )}
       <p className="text-xs text-muted-foreground">{t('gatewayRoutes.form.requiresApiKeyHint')}</p>
+    </div>
+  );
+}
+
+/**
+ * Unlike `requiresApiKey`, `requiresAllowedIp` has no role restriction —
+ * any user who can edit the route (ADMIN/OPERATOR) can toggle it, so this
+ * field is always enabled and needs no tooltip/disabled state.
+ */
+function RequiresAllowedIpField({
+  idPrefix,
+  register,
+}: {
+  idPrefix: string;
+  register: UseFormRegister<CreateGatewayRouteFormValues>;
+}) {
+  const { t } = useTranslation();
+  const fieldId = `${idPrefix}-requires-allowed-ip`;
+
+  return (
+    <div className="space-y-1.5">
+      <label htmlFor={fieldId} className="flex items-center gap-2 text-sm">
+        <input
+          id={fieldId}
+          type="checkbox"
+          className="size-4"
+          {...register('requiresAllowedIp')}
+        />
+        {t('gatewayRoutes.form.requiresAllowedIp')}
+      </label>
+      <p className="text-xs text-muted-foreground">{t('gatewayRoutes.form.requiresAllowedIpHint')}</p>
+    </div>
+  );
+}
+
+/** Shared by both Create and Edit forms — groups the two independent per-route security toggles under one heading. */
+function RouteSecurityFields({
+  idPrefix,
+  isAdmin,
+  register,
+}: {
+  idPrefix: string;
+  isAdmin: boolean;
+  register: UseFormRegister<CreateGatewayRouteFormValues>;
+}) {
+  const { t } = useTranslation();
+
+  return (
+    <div className="space-y-3">
+      <span className="text-sm font-medium">{t('gatewayRoutes.form.authenticationTitle')}</span>
+      <RequiresApiKeyField idPrefix={idPrefix} isAdmin={isAdmin} register={register} />
+      <RequiresAllowedIpField idPrefix={idPrefix} register={register} />
     </div>
   );
 }
@@ -154,6 +206,7 @@ export function CreateGatewayRouteForm({
       timeoutMs: DEFAULT_GATEWAY_ROUTE_TIMEOUT_MS,
       retryCount: DEFAULT_GATEWAY_ROUTE_RETRY_COUNT,
       requiresApiKey: true,
+      requiresAllowedIp: true,
     },
   });
 
@@ -351,7 +404,7 @@ export function CreateGatewayRouteForm({
               )}
             </div>
 
-            <RequiresApiKeyField
+            <RouteSecurityFields
               idPrefix="create-gateway-route"
               isAdmin={isAdmin}
               register={register}
@@ -426,6 +479,7 @@ export function EditGatewayRouteForm({
     timeoutMs: route.timeoutMs,
     retryCount: route.retryCount,
     requiresApiKey: route.requiresApiKey,
+    requiresAllowedIp: route.requiresAllowedIp,
   };
 
   const {
@@ -468,6 +522,11 @@ export function EditGatewayRouteForm({
     }
     if (values.timeoutMs !== defaultValues.timeoutMs) payload.timeoutMs = values.timeoutMs;
     if (values.retryCount !== defaultValues.retryCount) payload.retryCount = values.retryCount;
+    // requiresAllowedIp has no permission gate or confirmation step — it saves
+    // immediately like any other field, unlike requiresApiKey below.
+    if (values.requiresAllowedIp !== defaultValues.requiresAllowedIp) {
+      payload.requiresAllowedIp = values.requiresAllowedIp;
+    }
     // Non-ADMIN's checkbox is disabled and can never actually differ from
     // `defaultValues`, so this only ever fires for an ADMIN's real change.
     if (values.requiresApiKey !== defaultValues.requiresApiKey) {
@@ -591,7 +650,7 @@ export function EditGatewayRouteForm({
               )}
             </div>
 
-            <RequiresApiKeyField
+            <RouteSecurityFields
               idPrefix="edit-gateway-route"
               isAdmin={isAdmin}
               register={register}

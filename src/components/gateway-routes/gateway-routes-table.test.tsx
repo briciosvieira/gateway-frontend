@@ -22,6 +22,7 @@ function makeRoute(overrides: Partial<GatewayRoute>): GatewayRoute {
     retryCount: 0,
     active: true,
     requiresApiKey: true,
+    requiresAllowedIp: true,
     createdAt: '2026-01-01T00:00:00.000Z',
     updatedAt: '2026-01-01T00:00:00.000Z',
     client: { id: 'client-1', name: 'Acme Corp', code: 'ACME', active: true },
@@ -151,5 +152,43 @@ describe('GatewayRoutesTable', () => {
 
     expect(screen.getByText('No API Key')).toBeInTheDocument();
     expect(screen.getByText('Inactive')).toBeInTheDocument();
+  });
+
+  it('shows no Allowed IP alert badge for a route that requires it', () => {
+    render(
+      <GatewayRoutesTable
+        rows={[makeRoute({ requiresAllowedIp: true })]}
+        permissions={ALL_PERMISSIONS}
+        {...NOOP_ACTIONS}
+      />,
+    );
+
+    expect(screen.queryByText('Any origin')).not.toBeInTheDocument();
+  });
+
+  it('shows the "Any origin" warning badge for a route with requiresAllowedIp=false, independently of Active/Inactive status', () => {
+    render(
+      <GatewayRoutesTable
+        rows={[makeRoute({ requiresAllowedIp: false, active: false })]}
+        permissions={ALL_PERMISSIONS}
+        {...NOOP_ACTIONS}
+      />,
+    );
+
+    expect(screen.getByText('Any origin')).toBeInTheDocument();
+    expect(screen.getByText('Inactive')).toBeInTheDocument();
+  });
+
+  it('shows both badges independently when requiresApiKey and requiresAllowedIp are both false', () => {
+    render(
+      <GatewayRoutesTable
+        rows={[makeRoute({ requiresApiKey: false, requiresAllowedIp: false })]}
+        permissions={ALL_PERMISSIONS}
+        {...NOOP_ACTIONS}
+      />,
+    );
+
+    expect(screen.getByText('No API Key')).toBeInTheDocument();
+    expect(screen.getByText('Any origin')).toBeInTheDocument();
   });
 });

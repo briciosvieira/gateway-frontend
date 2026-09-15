@@ -811,10 +811,12 @@
       "timeoutMs": "Timeout (ms)",
       "retryCount": "Retry attempts",
       "description": "Description",
-      "authenticationTitle": "Route authentication",
+      "authenticationTitle": "Route security",
       "requiresApiKey": "Require X-API-Key",
       "requiresApiKeyHint": "When enabled, the consumer must send a valid API Key in the X-API-Key header.",
       "requiresApiKeyAdminOnly": "Only administrators can disable API Key authentication.",
+      "requiresAllowedIp": "Restrict by IP/DNS",
+      "requiresAllowedIpHint": "When enabled, the request's origin must match an IP, network or DNS entry registered in Allowed IPs for the client.",
       "disableApiKeyTitle": "Disable API Key authentication?",
       "disableApiKeyDescription": "This endpoint will be callable without the X-API-Key header. The route's other protections remain active, such as client status, route status, Allowed IPs, TLS and Route Headers. Only use this option when the integration genuinely requires access without an API Key.",
       "disableApiKeyConfirm": "Disable authentication",
@@ -850,11 +852,17 @@
       "authenticationTitle": "Authentication",
       "apiKeyRequired": "X-API-Key required",
       "apiKeyDisabled": "X-API-Key disabled",
-      "apiKeyDisabledDescription": "This route accepts requests without an API Key. The Gateway's other protections still apply."
+      "apiKeyDisabledDescription": "This route accepts requests without an API Key. The Gateway's other protections still apply.",
+      "allowedIpTitle": "IP/DNS restriction",
+      "allowedIpRequired": "IP/DNS restricted",
+      "allowedIpDisabled": "Any origin",
+      "allowedIpDisabledDescription": "This route accepts requests from any source IP. The Gateway's other protections still apply."
     },
     "badges": {
       "noApiKey": "No API Key",
-      "noApiKeyTooltip": "This route can be called without X-API-Key."
+      "noApiKeyTooltip": "This route can be called without X-API-Key.",
+      "noAllowedIp": "Any origin",
+      "noAllowedIpTooltip": "This route accepts requests from any source IP, without Allowed IP restriction."
     },
     "success": {
       "created": "Route {{name}} created successfully.",

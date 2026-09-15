@@ -1,6 +1,7 @@
 import { MoreHorizontal, Pencil, Power, Trash2 } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 
+import { AllowedIpRequirementBadge } from '@/components/gateway-routes/allowed-ip-requirement-badge';
 import { ApiKeyRequirementBadge } from '@/components/gateway-routes/api-key-requirement-badge';
 import { MethodBadge } from '@/components/gateway-routes/method-badge';
 import { PublicEndpointField } from '@/components/gateway-routes/public-endpoint-field';
@@ -89,7 +90,7 @@ export function GatewayRoutesTable({
               key={row.id}
               className={cn(
                 'hover:bg-surface/60',
-                !row.requiresApiKey && 'border-l-2 border-l-amber-500',
+                (!row.requiresApiKey || !row.requiresAllowedIp) && 'border-l-2 border-l-amber-500',
               )}
             >
               <td className="px-4 py-2 font-medium text-foreground">{row.name}</td>
@@ -109,6 +110,7 @@ export function GatewayRoutesTable({
                 <div className="flex flex-col items-start gap-1">
                   <StatusBadge active={row.active} />
                   {!row.requiresApiKey && <ApiKeyRequirementBadge />}
+                  {!row.requiresAllowedIp && <AllowedIpRequirementBadge />}
                 </div>
               </td>
               <td className="px-4 py-2">{dateFormatter.format(new Date(row.createdAt))}</td>

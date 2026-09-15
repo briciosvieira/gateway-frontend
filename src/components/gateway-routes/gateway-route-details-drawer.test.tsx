@@ -17,6 +17,7 @@ const ROUTE: GatewayRoute = {
   retryCount: 0,
   active: true,
   requiresApiKey: true,
+  requiresAllowedIp: true,
   createdAt: '2026-01-01T00:00:00.000Z',
   updatedAt: '2026-01-01T00:00:00.000Z',
   client: { id: 'client-1', name: 'Acme Corp', code: 'ACME', active: true },
@@ -48,6 +49,30 @@ describe('GatewayRouteDetailsDrawer', () => {
     expect(
       screen.getByText(
         "This route accepts requests without an API Key. The Gateway's other protections still apply.",
+      ),
+    ).toBeInTheDocument();
+  });
+
+  it('shows "IP/DNS restricted" for a route with requiresAllowedIp=true', () => {
+    render(<GatewayRouteDetailsDrawer open route={ROUTE} onOpenChange={() => {}} />);
+
+    expect(screen.getByText('IP/DNS restricted')).toBeInTheDocument();
+    expect(screen.queryByText('Any origin')).not.toBeInTheDocument();
+  });
+
+  it('shows "Any origin" plus an explanatory description for requiresAllowedIp=false', () => {
+    render(
+      <GatewayRouteDetailsDrawer
+        open
+        route={{ ...ROUTE, requiresAllowedIp: false }}
+        onOpenChange={() => {}}
+      />,
+    );
+
+    expect(screen.getByText('Any origin')).toBeInTheDocument();
+    expect(
+      screen.getByText(
+        "This route accepts requests from any source IP. The Gateway's other protections still apply.",
       ),
     ).toBeInTheDocument();
   });

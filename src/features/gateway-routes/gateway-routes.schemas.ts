@@ -61,6 +61,7 @@ export const createGatewayRouteSchema = z.object({
   timeoutMs: timeoutMsSchema,
   retryCount: retryCountSchema,
   requiresApiKey: z.boolean(),
+  requiresAllowedIp: z.boolean(),
 });
 
 export type CreateGatewayRouteFormValues = z.infer<typeof createGatewayRouteSchema>;

@@ -31,6 +31,7 @@ const sampleRoute = {
   retryCount: 0,
   active: true,
   requiresApiKey: true,
+  requiresAllowedIp: true,
   createdAt: '2026-01-01T00:00:00.000Z',
   updatedAt: '2026-01-01T00:00:00.000Z',
   client: { id: 'client-1', name: 'Acme Corp', code: 'ACME', active: true },
